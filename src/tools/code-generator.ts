@@ -2,7 +2,11 @@ import { z } from 'zod';
 
 export const codeGeneratorInputSchema = z.object({
   type: z.enum(['nav', 'pagelist', 'form']).describe('Code type to generate'),
-  style: z.enum(['simple', 'dropdown', 'tree', 'tabs', 'cards', 'masonry']).optional().default('simple').describe('Style variant'),
+  style: z
+    .enum(['simple', 'dropdown', 'tree', 'tabs', 'cards', 'masonry'])
+    .optional()
+    .default('simple')
+    .describe('Style variant'),
   options: z.string().optional().describe('Additional options (JSON)'),
 });
 

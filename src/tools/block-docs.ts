@@ -3,7 +3,22 @@ import { BASE_URL } from '../utils/pages.js';
 
 export const blockDocsInputSchema = z.object({
   type: z
-    .enum(['all', 'text', 'image', 'gallery', 'pagelist', 'section', 'columns', 'button', 'quote', 'code', 'divider', 'video', 'embed', 'rss-feed'])
+    .enum([
+      'all',
+      'text',
+      'image',
+      'gallery',
+      'pagelist',
+      'section',
+      'columns',
+      'button',
+      'quote',
+      'code',
+      'divider',
+      'video',
+      'embed',
+      'rss-feed',
+    ])
     .optional()
     .default('all')
     .describe('Block type'),
@@ -106,13 +121,16 @@ export function getBlockDocs(input: BlockDocsInput): string {
   return lines.join('\n');
 }
 
-function formatBlockDoc(type: string, block: { title: string; description: string; props: string[] }): string {
+function formatBlockDoc(
+  type: string,
+  block: { title: string; description: string; props: string[] }
+): string {
   return [
     `## ${block.title}\n`,
     `**Type:** \`${type}\`\n`,
     `\n${block.description}\n`,
     '\n### Properties\n',
-    ...block.props.map((p) => `- ${p}`),
+    ...block.props.map(p => `- ${p}`),
     '\n---\n',
     `\n[Back to all blocks](${BASE_URL}/blocks)\n`,
   ].join('\n');

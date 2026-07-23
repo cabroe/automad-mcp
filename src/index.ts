@@ -422,88 +422,140 @@ server.tool(
 
 // ─── Version & Info Tools ───────────────────────────────────────────────────
 
-
-server.tool(
-  'get_automad_version',
-  'Get information about Automad v2.',
-  {},
-  async () => {
-    const lines = [
-      '## Automad v2',
-      '',
-      '**Documentation:** [https://automad.org/version-2](https://automad.org/version-2)',
-      '',
-      '**Starter Kit:** [automad-theme-starter-kit](https://github.com/automadcms/automad-theme-starter-kit)',
-    ];
-    return { content: [{ type: 'text', text: lines.join('\n') }] };
-  }
-);
+server.tool('get_automad_version', 'Get information about Automad v2.', {}, async () => {
+  const lines = [
+    '## Automad v2',
+    '',
+    '**Documentation:** [https://automad.org/version-2](https://automad.org/version-2)',
+    '',
+    '**Starter Kit:** [automad-theme-starter-kit](https://github.com/automadcms/automad-theme-starter-kit)',
+  ];
+  return { content: [{ type: 'text', text: lines.join('\n') }] };
+});
 
 // ─── Documentation Tools ─────────────────────────────────────────────────────
 
-server.tool('get_block_docs', 'Get documentation for Automad v2 block types.', {
-  type: z
-    .enum(['all', 'text', 'image', 'gallery', 'pagelist', 'section', 'columns', 'button', 'quote', 'code', 'divider', 'video', 'embed', 'rss-feed'])
-    .optional()
-    .default('all')
-    .describe('Block type'),
-}, async (args) => {
-  const result = getBlockDocs({ type: args.type });
-  return { content: [{ type: 'text', text: result }] };
-});
+server.tool(
+  'get_block_docs',
+  'Get documentation for Automad v2 block types.',
+  {
+    type: z
+      .enum([
+        'all',
+        'text',
+        'image',
+        'gallery',
+        'pagelist',
+        'section',
+        'columns',
+        'button',
+        'quote',
+        'code',
+        'divider',
+        'video',
+        'embed',
+        'rss-feed',
+      ])
+      .optional()
+      .default('all')
+      .describe('Block type'),
+  },
+  async args => {
+    const result = getBlockDocs({ type: args.type });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
 
-server.tool('get_api_docs', 'Get API documentation (PHP, REST, Webhooks).', {
-  type: z.enum(['all', 'php', 'rest', 'webhooks']).optional().default('all').describe('API type'),
-}, async (args) => {
-  const result = getApiDocs({ type: args.type });
-  return { content: [{ type: 'text', text: result }] };
-});
+server.tool(
+  'get_api_docs',
+  'Get API documentation (PHP, REST, Webhooks).',
+  {
+    type: z.enum(['all', 'php', 'rest', 'webhooks']).optional().default('all').describe('API type'),
+  },
+  async args => {
+    const result = getApiDocs({ type: args.type });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
 
-server.tool('get_cli_docs', 'Get CLI command documentation.', {
-  command: z.string().optional().describe('Specific command to document'),
-}, async (args) => {
-  const result = getCliDocs({ command: args.command });
-  return { content: [{ type: 'text', text: result }] };
-});
+server.tool(
+  'get_cli_docs',
+  'Get CLI command documentation.',
+  {
+    command: z.string().optional().describe('Specific command to document'),
+  },
+  async args => {
+    const result = getCliDocs({ command: args.command });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
 
 // ─── Theme Checks ───────────────────────────────────────────────────────────
 
-server.tool('check_theme', 'Perform theme checks (schema, a11y, seo).', {
-  themePath: z.string().optional().describe('Theme path'),
-  check: z.enum(['all', 'schema', 'a11y', 'seo']).optional().default('all').describe('Check type'),
-}, async (args) => {
-  const result = await themeCheck({ themePath: args.themePath, check: args.check });
-  return { content: [{ type: 'text', text: result }] };
-});
+server.tool(
+  'check_theme',
+  'Perform theme checks (schema, a11y, seo).',
+  {
+    themePath: z.string().optional().describe('Theme path'),
+    check: z
+      .enum(['all', 'schema', 'a11y', 'seo'])
+      .optional()
+      .default('all')
+      .describe('Check type'),
+  },
+  async args => {
+    const result = await themeCheck({ themePath: args.themePath, check: args.check });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
 
 // ─── Code Generator ──────────────────────────────────────────────────────────
 
-server.tool('generate_code', 'Generate common Automad template code (nav, pagelist, form).', {
-  type: z.enum(['nav', 'pagelist', 'form']).describe('Code type'),
-  style: z.enum(['simple', 'dropdown', 'tree', 'tabs', 'cards', 'masonry']).optional().default('simple').describe('Style'),
-}, async (args) => {
-  const result = generateCode({ type: args.type, style: args.style });
-  return { content: [{ type: 'text', text: result }] };
-});
+server.tool(
+  'generate_code',
+  'Generate common Automad template code (nav, pagelist, form).',
+  {
+    type: z.enum(['nav', 'pagelist', 'form']).describe('Code type'),
+    style: z
+      .enum(['simple', 'dropdown', 'tree', 'tabs', 'cards', 'masonry'])
+      .optional()
+      .default('simple')
+      .describe('Style'),
+  },
+  async args => {
+    const result = generateCode({ type: args.type, style: args.style });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
 
 // ─── Theme Utils ─────────────────────────────────────────────────────────────
 
-server.tool('compare_theme_versions', 'Compare two themes or versions.', {
-  path1: z.string().optional().describe('First theme path'),
-  path2: z.string().optional().describe('Second theme path'),
-  version: z.string().optional().describe('Compare with version tag'),
-}, async (args) => {
-  const result = await themeDiff({ path1: args.path1, path2: args.path2, version: args.version });
-  return { content: [{ type: 'text', text: result }] };
-});
+server.tool(
+  'compare_theme_versions',
+  'Compare two themes or versions.',
+  {
+    path1: z.string().optional().describe('First theme path'),
+    path2: z.string().optional().describe('Second theme path'),
+    version: z.string().optional().describe('Compare with version tag'),
+  },
+  async args => {
+    const result = await themeDiff({ path1: args.path1, path2: args.path2, version: args.version });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
 
-server.tool('pack_theme', 'Get info for packaging a theme as ZIP.', {
-  themePath: z.string().optional().describe('Theme path'),
-  outputPath: z.string().optional().describe('Output ZIP path'),
-}, async (args) => {
-  const result = await packTheme({ themePath: args.themePath, outputPath: args.outputPath });
-  return { content: [{ type: 'text', text: result }] };
-});
+server.tool(
+  'pack_theme',
+  'Get info for packaging a theme as ZIP.',
+  {
+    themePath: z.string().optional().describe('Theme path'),
+    outputPath: z.string().optional().describe('Output ZIP path'),
+  },
+  async args => {
+    const result = await packTheme({ themePath: args.themePath, outputPath: args.outputPath });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
 
 // ─── Cache Tools ─────────────────────────────────────────────────────────────
 

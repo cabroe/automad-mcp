@@ -40,9 +40,9 @@ export async function themeDiff(input: ThemeDiffInput): Promise<string> {
     lines.push(`**Path 2:** ${path2}\n`);
     lines.push('---\n');
 
-    const onlyIn1 = files1.filter((f) => !files2.includes(f));
-    const onlyIn2 = files2.filter((f) => !files1.includes(f));
-    const inBoth = files1.filter((f) => files2.includes(f));
+    const onlyIn1 = files1.filter(f => !files2.includes(f));
+    const onlyIn2 = files2.filter(f => !files1.includes(f));
+    const inBoth = files1.filter(f => files2.includes(f));
 
     if (onlyIn1.length > 0) {
       lines.push('### Only in Path 1\n');

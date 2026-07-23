@@ -65,7 +65,7 @@ export function getCliDocs(input: CliDocsInput): string {
   const { command } = input;
 
   if (command) {
-    const cmd = CLI_COMMANDS.find((c) => c.name.includes(command));
+    const cmd = CLI_COMMANDS.find(c => c.name.includes(command));
     if (cmd) {
       return [
         `## ${cmd.name}\n`,

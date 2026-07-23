@@ -108,7 +108,12 @@ export const PAGES: DocPage[] = [
     parent: 'Building Themes',
     section: 'version-2',
   },
-  { title: 'Template Language', url: '/template-language', parent: 'Version 2', section: 'version-2' },
+  {
+    title: 'Template Language',
+    url: '/template-language',
+    parent: 'Version 2',
+    section: 'version-2',
+  },
   {
     title: 'Variables',
     url: '/template-language/variables',

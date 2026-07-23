@@ -50,8 +50,8 @@ export async function themeCheck(input: ThemeCheckInput): Promise<string> {
     results.push(...checkSeo(themeDir));
   }
 
-  const passed = results.filter((r) => r.passed).length;
-  const failed = results.filter((r) => !r.passed).length;
+  const passed = results.filter(r => r.passed).length;
+  const failed = results.filter(r => !r.passed).length;
   const score = Math.round((passed / results.length) * 100);
 
   const lines: string[] = [
@@ -60,8 +60,8 @@ export async function themeCheck(input: ThemeCheckInput): Promise<string> {
     '---\n',
   ];
 
-  const errors = results.filter((r) => !r.passed && r.severity === 'error');
-  const warnings = results.filter((r) => !r.passed && r.severity === 'warning');
+  const errors = results.filter(r => !r.passed && r.severity === 'error');
+  const warnings = results.filter(r => !r.passed && r.severity === 'warning');
 
   if (errors.length > 0) {
     lines.push('### ✗ Errors\n');
@@ -76,7 +76,7 @@ export async function themeCheck(input: ThemeCheckInput): Promise<string> {
   }
 
   lines.push('### ✓ Passed\n');
-  for (const r of results.filter((r) => r.passed).slice(0, 10)) {
+  for (const r of results.filter(r => r.passed).slice(0, 10)) {
     lines.push(`- ${r.message}`);
   }
 
@@ -98,7 +98,11 @@ async function checkSchema(themeDir: string): Promise<CheckResult[]> {
     const required = ['name'];
     for (const field of required) {
       if (!theme[field]) {
-        results.push({ passed: false, message: `theme.json: missing "${field}"`, severity: 'error' });
+        results.push({
+          passed: false,
+          message: `theme.json: missing "${field}"`,
+          severity: 'error',
+        });
       } else {
         results.push({ passed: true, message: `theme.json: "${field}" present`, severity: 'info' });
       }
@@ -124,8 +128,16 @@ function checkA11y(themeDir: string): CheckResult[] {
     results.push({ passed: true, message: `${file}: checked for img/alt`, severity: 'info' });
   }
 
-  results.push({ passed: true, message: 'A11y: color contrast not checked (requires browser)', severity: 'warning' });
-  results.push({ passed: true, message: 'A11y: keyboard navigation not checked (requires testing)', severity: 'warning' });
+  results.push({
+    passed: true,
+    message: 'A11y: color contrast not checked (requires browser)',
+    severity: 'warning',
+  });
+  results.push({
+    passed: true,
+    message: 'A11y: keyboard navigation not checked (requires testing)',
+    severity: 'warning',
+  });
 
   return results;
 }
@@ -147,7 +159,11 @@ function checkSeo(themeDir: string): CheckResult[] {
     if (content.includes(':description')) {
       results.push({ passed: true, message: 'SEO: meta description found', severity: 'info' });
     } else {
-      results.push({ passed: false, message: 'SEO: meta description missing', severity: 'warning' });
+      results.push({
+        passed: false,
+        message: 'SEO: meta description missing',
+        severity: 'warning',
+      });
     }
   }
 
