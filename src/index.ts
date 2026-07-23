@@ -126,13 +126,21 @@ server.tool(
     path: z
       .string()
       .min(1)
+      .optional()
       .describe(
         "File path within the repo, e.g. 'README.md', 'default.php', 'theme.json', 'blocks/pagelist/grid.php'"
+      ),
+    file: z
+      .string()
+      .min(1)
+      .optional()
+      .describe(
+        "Alias for 'path'. File path within the repo, e.g. 'README.md', 'default.php', 'theme.json'."
       ),
   },
   async (args) => {
     try {
-      const result = await getStarterKitFile({ path: args.path });
+      const result = await getStarterKitFile({ path: args.path ?? args.file ?? "" });
       return {
         content: [{ type: "text", text: result }],
       };

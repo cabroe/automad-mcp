@@ -18,10 +18,20 @@ export const getStarterKitFileInputSchema = z.object({
   path: z
     .string()
     .min(1)
+    .optional()
     .describe(
       "Path to the file in the starter kit repo, e.g. 'README.md', 'default.php', 'theme.json', 'blocks/pagelist/grid.php'. Use list_starter_kit_files to discover valid paths."
     ),
-});
+  file: z
+    .string()
+    .min(1)
+    .optional()
+    .describe(
+      "Alias for 'path'. File path within the repo, e.g. 'README.md', 'default.php', 'theme.json', 'blocks/pagelist/grid.php'."
+    ),
+}).transform((data) => ({
+  path: data.path ?? data.file ?? "",
+}));
 
 export type GetStarterKitFileInput = z.infer<typeof getStarterKitFileInputSchema>;
 
