@@ -5,16 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2024-07-23
+## [0.0.1] - 2024-07-23
 
-### Changed
+### Added
 
-- **Automad v2 only** - This MCP server now targets Automad v2 exclusively
-- Updated Docker image to `automad/automad:v2`
-- Removed v1 migration notes
-- Version bumped to 2.0.0
-
-## [1.0.0] - 2024-07-23
+- **Automad v2 only** - MCP server for Automad v2 exclusively
+- Uses https://automad.org/version-2 documentation
+- All tools for Automad v2 theme development
 
 ### Added
 

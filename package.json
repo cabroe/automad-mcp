@@ -1,6 +1,6 @@
 {
   "name": "automad-mcp",
-  "version": "2.0.0",
+  "version": "0.0.1",
   "description": "MCP server for Automad v2 - documentation, theme development tools",
   "type": "module",
   "main": "src/index.ts",

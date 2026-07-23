@@ -34,7 +34,7 @@ loadConfig().then(() => {
 // ─── MCP Server ─────────────────────────────────────────────────────────────
 const server = new McpServer({
   name: 'automad-docs',
-  version: '2.0.0',
+  version: '0.0.1',
 });
 
 // ─── Documentation Tools ─────────────────────────────────────────────────────
@@ -432,22 +432,21 @@ server.tool(
 
 // ─── Version & Info Tools ───────────────────────────────────────────────────
 
-server.tool('get_automad_version', 'Get information about Automad Version 2.', {}, async () => {
-  const lines = [
-    '## Automad Version 2',
-    '',
-    '**Key Changes:**',
-    '- New Template Engine with better performance',
-    '- Dashboard Redesign with block editor',
-    '- GitHub-based package system',
-    '- TypeScript support in themes',
-    '',
-    '**Resources:**',
-    '- [Version 2 Overview](https://automad.org/version-2)',
-    '- [Starter Kit](https://github.com/automadcms/automad-theme-starter-kit)',
-  ];
-  return { content: [{ type: 'text', text: lines.join('\n') }] };
-});
+server.tool(
+  'get_automad_version',
+  'Get information about Automad v2.',
+  {},
+  async () => {
+    const lines = [
+      '## Automad v2',
+      '',
+      '**Documentation:** [https://automad.org/version-2](https://automad.org/version-2)',
+      '',
+      '**Starter Kit:** [automad-theme-starter-kit](https://github.com/automadcms/automad-theme-starter-kit)',
+    ];
+    return { content: [{ type: 'text', text: lines.join('\n') }] };
+  }
+);
 
 // ─── Cache Tools ─────────────────────────────────────────────────────────────
 
