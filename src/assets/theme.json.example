@@ -1,0 +1,66 @@
+{
+  "name": "My Theme",
+  "description": "A minimal Automad theme.",
+  "author": "Your Name",
+  "version": "1.0.0",
+  "license": "MIT",
+
+  "_comment": [
+    "masks.page — fields listed here get a defined label/tooltip in per-page data.",
+    "masks.shared — fields listed here appear ONCE in Dashboard → Shared → General Data",
+    "                  and disappear from per-page settings. Use for site-wide values",
+    "                  (logo, site name, default og:image, brand colors).",
+    "templates — list of *.php files to advertise in the dashboard template selector.",
+    "            Required if you use the split-layout pattern (templates/ base + light/dark",
+    "            variants) — Automad will only show templates you list here.",
+    "tooltips — key is the field name; value is the helper text shown next to that field",
+    "           in the dashboard. Use empty strings or omit to skip."
+  ],
+
+  "templates": [
+    "default.php",
+    "page.php",
+    "post.php",
+    "page_not_found.php"
+  ],
+
+  "masks": {
+    "page": [
+      "+hero",
+      "+main"
+    ],
+    "shared": [
+      "brand",
+      "imageLogo",
+      "logoHeight",
+      "imageFavicon",
+      "imageAppleTouchIcon",
+      "imageSocial",
+      "metaTitle",
+      "metaDescription",
+      "theme",
+      "sitename",
+      "textFooter",
+      "+footerBanner"
+    ]
+  },
+
+  "tooltips": {
+    "+main": "Primary editable content for this page (block editor).",
+    "+hero": "Optional hero/teaser section, shown above the main content.",
+    "+footerBanner": "Optional shared banner shown at the bottom of every page (block editor).",
+    "brand": "HTML, SVG or text used as the logo when no imageLogo is set.",
+    "imageLogo": "Logo image (recommended over brand text).",
+    "logoHeight": "Height of the logo in pixels.",
+    "imageFavicon": "Favicon (.ico or .png).",
+    "imageAppleTouchIcon": "Apple touch icon (180×180 .png recommended).",
+    "imageSocial": "Default og:image / social sharing preview.",
+    "metaTitle": "Optional browser/tab title override.",
+    "metaDescription": "Optional meta description for SEO and social cards.",
+    "theme": "Theme package path for asset URLs, e.g. 'acme/my-theme'. Set once in shared data.",
+    "sitename": "Site name shown in headers and footers.",
+    "textFooter": "Footer copyright / tagline text.",
+    "selectColorTheme": "Per-page color scheme override (light/dark/etc.).",
+    "checkboxHideTitle": "Hide the <h1> on this page."
+  }
+}
