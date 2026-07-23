@@ -17,7 +17,6 @@ import { compareThemes } from './tools/theme-compare.js';
 import { generateTheme } from './tools/theme-generator.js';
 import { generateI18n } from './tools/i18n-generator.js';
 import { livePreview } from './tools/live-preview.js';
-import { getDockerHelp } from './tools/docker-help.js';
 import { getBlockTemplates, getBlockTemplate } from './tools/block-templates.js';
 import { getContextPatterns } from './tools/context-patterns.js';
 import { getTemplateSyntax } from './tools/template-syntax.js';
@@ -185,22 +184,6 @@ server.tool(
   },
   async args => {
     const result = getTemplateSyntax({ type: args.type });
-    return { content: [{ type: 'text', text: result }] };
-  }
-);
-
-server.tool(
-  'get_docker_help',
-  'Get Docker testing guide for Automad themes. Topics: setup (directory structure, prerequisites), commands (start/stop, theme copy, cache), debug (logs, credentials, troubleshooting), compose (docker-compose.yml example).',
-  {
-    topic: z
-      .enum(['all', 'setup', 'commands', 'debug', 'compose'])
-      .optional()
-      .default('all')
-      .describe('Docker help topic'),
-  },
-  async args => {
-    const result = getDockerHelp({ topic: args.topic });
     return { content: [{ type: 'text', text: result }] };
   }
 );
