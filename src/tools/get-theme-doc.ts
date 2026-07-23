@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join, resolve } from 'path';
 
@@ -93,7 +94,6 @@ async function getThemeOverview(themeDir: string): Promise<string> {
   }
 
   // List all PHP files
-  await import('fs/promises'); // Ensure fs/promises is loaded
   try {
     const allFiles = await getAllFiles(themeDir, []);
     const phpFiles = allFiles.filter(f => f.endsWith('.php') && !f.includes('node_modules'));
