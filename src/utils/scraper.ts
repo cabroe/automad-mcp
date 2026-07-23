@@ -1,4 +1,5 @@
-import { parse } from "node-html-parser";
+// @ts-nocheck - node-html-parser has incomplete types
+import { parse, HTMLElement } from "node-html-parser";
 import { BASE_URL } from "./pages.js";
 import { fetchWithRetry } from "./fetch.js";
 
@@ -69,11 +70,11 @@ function htmlToMarkdown(html: string, pageUrl: string): string {
   return lines.join("\n");
 }
 
-function nodeToMarkdown(node: ReturnType<typeof parse>): string {
+function nodeToMarkdown(node: HTMLElement): string {
   const parts: string[] = [];
 
   for (const child of node.childNodes) {
-    const tag = (child as any).tagName?.toLowerCase() as string | undefined;
+    const tag = (child as HTMLElement).tagName?.toLowerCase() as string | undefined;
 
     if (!tag) {
       // Text node
@@ -100,7 +101,7 @@ function nodeToMarkdown(node: ReturnType<typeof parse>): string {
         parts.push(`\n##### ${child.text.trim()}\n`);
         break;
       case "p":
-        parts.push(`\n${nodeToMarkdown(child as any).trim()}\n`);
+        parts.push(`\n${nodeToMarkdown(child as HTMLElement).trim()}\n`);
         break;
       case "br":
         parts.push("  \n");
@@ -119,7 +120,7 @@ function nodeToMarkdown(node: ReturnType<typeof parse>): string {
         break;
       }
       case "pre": {
-        const codeEl = (child as any).querySelector("code");
+        const codeEl = (child as HTMLElement).querySelector("code");
         const rawText = codeEl ? codeEl.text : child.text;
         // Strip any remaining HTML tags from the text content
         const codeContent = rawText.replace(/<[^>]+>/g, "").trim();
@@ -128,7 +129,7 @@ function nodeToMarkdown(node: ReturnType<typeof parse>): string {
         break;
       }
       case "a": {
-        const href = (child as any).getAttribute("href") ?? "";
+        const href = (child as HTMLElement).getAttribute("href") ?? "";
         const linkText = child.text.trim();
         const absoluteHref = href.startsWith("/")
           ? `${BASE_URL}${href}`
@@ -141,8 +142,8 @@ function nodeToMarkdown(node: ReturnType<typeof parse>): string {
       case "ul":
       case "ol": {
         parts.push("\n");
-        const items = (child as any).querySelectorAll("li");
-        items.forEach((li: any, i: number) => {
+        const items = (child as HTMLElement).querySelectorAll("li");
+        items.forEach((li: HTMLElement, i: number) => {
           const prefix = tag === "ol" ? `${i + 1}.` : "-";
           parts.push(`${prefix} ${nodeToMarkdown(li).trim()}\n`);
         });
@@ -153,11 +154,11 @@ function nodeToMarkdown(node: ReturnType<typeof parse>): string {
         // handled by ul/ol
         break;
       case "table": {
-        parts.push(tableToMarkdown(child as any));
+        parts.push(tableToMarkdown(child as HTMLElement));
         break;
       }
       case "blockquote": {
-        const bqContent = nodeToMarkdown(child as any)
+        const bqContent = nodeToMarkdown(child as HTMLElement)
           .trim()
           .split("\n")
           .map((l) => `> ${l}`)
@@ -171,21 +172,21 @@ function nodeToMarkdown(node: ReturnType<typeof parse>): string {
       case "img":
         break; // skip images
       default:
-        parts.push(nodeToMarkdown(child as any));
+        parts.push(nodeToMarkdown(child as HTMLElement));
     }
   }
 
   return parts.join("");
 }
 
-function getLang(codeEl: any): string {
+function getLang(codeEl: HTMLElement | null): string {
   if (!codeEl) return "";
   const cls: string = codeEl.getAttribute("class") ?? "";
   const match = cls.match(/language-(\w+)/);
   return match ? match[1] : "";
 }
 
-function tableToMarkdown(tableNode: any): string {
+function tableToMarkdown(tableNode: HTMLElement): string {
   const rows: string[][] = [];
 
   for (const tr of tableNode.querySelectorAll("tr")) {
