@@ -105,3 +105,66 @@ npm version patch  # or minor, major
 git push origin --tags
 ```
 Release workflow creates GitHub Release automatically.
+
+### MCP Client Configuration
+
+#### Claude Desktop (macOS)
+File: `~/Library/Application Support/Claude/claude_desktop_config.json`
+```json
+{
+  "mcpServers": {
+    "automad-docs": {
+      "command": "npx",
+      "args": ["tsx", "<REPO_PATH>/automad-mcp/src/index.ts"]
+    }
+  }
+}
+```
+
+#### Cursor
+File: `~/.cursor/mcp.json`
+```json
+{
+  "automad-docs": {
+    "command": "npx",
+    "args": ["tsx", "<REPO_PATH>/automad-mcp/src/index.ts"]
+  }
+}
+```
+
+#### VS Code
+File: `.vscode/mcp.json`
+```json
+{
+  "servers": {
+    "automad-docs": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["tsx", "<REPO_PATH>/automad-mcp/src/index.ts"]
+    }
+  }
+}
+```
+
+#### Windsurf
+File: `~/.windsurf/mcp.json`
+```json
+{
+  "automad-docs": {
+    "command": "npx",
+    "args": ["tsx", "<REPO_PATH>/automad-mcp/src/index.ts"]
+  }
+}
+```
+
+#### Continue (VS Code/JetBrains)
+File: `~/.continue/config.json`
+Add to `"mcpServers"`:
+```json
+{
+  "automad-docs": {
+    "command": "npx",
+    "args": ["tsx", "<REPO_PATH>/automad-mcp/src/index.ts"]
+  }
+}
+```
