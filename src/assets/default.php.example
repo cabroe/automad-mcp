@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="@{ :language | def('en') }">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>@{ metaTitle | def('@{ :title | def('@{ sitename }') }') }</title>
+  <meta name="description" content="@{ metaDescription | def('@{ :description }') }">
+
+  <# Use the shared `theme` field so asset URLs survive moving the theme. #>
+  <link rel="stylesheet" href="/packages/@{ theme | def('acme/my-theme') }/dist/style.css">
+
+  <# Optional: include a shared metatags partial (creates elements/metatags.php). #>
+  <# <@ elements/metatags.php @> #>
+
+  <# Optional favicons. Define imageFavicon / imageAppleTouchIcon in shared data. #>
+  <@~ if @{ imageFavicon } ~@>
+    <link rel="icon" href="@{ imageFavicon }">
+  <@~ end ~@>
+  <@~ if @{ imageAppleTouchIcon } ~@>
+    <link rel="apple-touch-icon" href="@{ imageAppleTouchIcon }">
+  <@~ end ~@>
+
+  <# Force unused field declarations into the dashboard via a comment block. #>
+  <#
+    @{ selectColorTheme }
+    @{ checkboxHideTitle }
+  #>
+</head>
+<body class="template-@{ :template | def('default') | sanitize }">
+
+  <# Reusable navbar partial (create elements/navbar.php). #>
+  <@ elements/navbar.php @>
+
+  <# Hero block area — wrapped only when non-empty. #>
+  <@~ if @{ +hero } ~@>
+    @{ +hero | replace ('/^(.+)$/is', '<section class="hero">$1</section>') }
+  <@~ end ~@>
+
+  <# Snippet pattern: child templates (page.php, post.php, ...) extend this and override `main`. #>
+  <@ snippet main @>
+    <main class="content">
+      <@~ if not @{ checkboxHideTitle } ~@>
+        <h1>@{ :title }</h1>
+      <@~ end ~@>
+      @{ +main }
+    </main>
+  <@ end @>
+  <@ main @>
+
+  <# Shared global footer banner (defined once in shared data). #>
+  <@~ if @{ +footerBanner } ~@>
+    @{ +footerBanner | replace ('/^(.+)$/is', '<section class="footer-banner">$1</section>') }
+  <@~ end ~@>
+
+  <footer class="site-footer">
+    @{ textFooter | def('&copy; @{ :now | dateFormat("Y") } @{ sitename }') }
+  </footer>
+
+</body>
+</html>

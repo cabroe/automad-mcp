@@ -34,6 +34,8 @@ import { generateDashboardTemplate } from './tools/dashboard-generator.js';
 import { i18nHelper } from './tools/i18n-helper.js';
 import { validateFieldNames } from './tools/field-validator.js';
 import { checkBrokenLinks } from './tools/link-checker.js';
+import { getThemeReference } from './tools/theme-references.js';
+import { getThemeAsset } from './tools/theme-assets.js';
 import { getCacheStats, clearAllCaches, clearCache } from './utils/cache.js';
 import { loadConfig, parseArgs, logVerbose } from './utils/config.js';
 
@@ -665,6 +667,47 @@ server.tool(
   },
   async args => {
     const result = await checkBrokenLinks({ themePath: args.themePath, baseUrl: args.baseUrl });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
+
+// ─── Theme Builder References (from automad-theme-builder skill) ───────────────
+
+server.tool(
+  'get_theme_reference',
+  'Get Automad theme builder reference documentation. Topics: template-syntax, block-layouts, blocks-snippets, docker-testing, i18n.',
+  {
+    topic: z
+      .enum([
+        'all',
+        'template-syntax',
+        'block-layouts',
+        'blocks-snippets',
+        'docker-testing',
+        'i18n',
+      ])
+      .optional()
+      .default('all')
+      .describe('Reference topic'),
+  },
+  async args => {
+    const result = await getThemeReference(args.topic);
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
+
+server.tool(
+  'get_theme_asset',
+  'Get Automad theme asset templates: theme.json.example, default.php.example, docker-compose.yml.example.',
+  {
+    type: z
+      .enum(['all', 'theme.json.example', 'default.php.example', 'docker-compose.yml.example'])
+      .optional()
+      .default('all')
+      .describe('Asset template type'),
+  },
+  async args => {
+    const result = await getThemeAsset(args.type);
     return { content: [{ type: 'text', text: result }] };
   }
 );

@@ -1,0 +1,30 @@
+# Place this file at the PROJECT ROOT.
+#
+# The official Automad Docker image keeps the entire install at /app
+# (config, pages, packages, cache). Mounting ./app:/app persists all of it
+# and lets you drop your theme into ./app/packages/<vendor>/<theme>/.
+#
+# Usage:
+#   1. docker compose up -d            # first run initializes ./app
+#   2. docker compose logs automad | grep -iE "user|password"   # get auto-created dashboard credentials
+#   3. open http://localhost:8080/dashboard                     # sign in
+#   3. copy your theme into ./app/packages/<vendor>/<theme>/
+#   4. dashboard → System → Themes → select your theme
+#
+# Source: https://automad.org/getting-started#docker
+
+services:
+  automad:
+    image: automad/automad:v1
+    container_name: automad
+    ports:
+      - "8080:80"
+    volumes:
+      # Mount the ENTIRE Automad install dir. This is the documented pattern.
+      # Do NOT bind-mount only /app/packages — that hides the built-in
+      # "standard" theme and breaks the first-run initialization.
+      - ./app:/app
+    # Uncomment to enable debug mode (detailed error output):
+    # environment:
+    #   - AM_DEBUG_ENABLED=true
+    restart: unless-stopped
