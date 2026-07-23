@@ -69,3 +69,26 @@ pwd
 | `npx tsx` not found | `npm install -g tsx` |
 | Config file missing | Create it manually |
 | Tools not visible | Restart the MCP client |
+
+---
+
+## Uninstallation
+
+To completely remove the Automad MCP server, run:
+
+```
+Uninstall the Automad MCP server:
+
+1. Remove the automad-docs entry from my MCP client config:
+   - Claude Desktop: ~/Library/Application Support/Claude/claude_desktop_config.json
+   - Cursor: ~/.cursor/mcp.json
+   - VS Code: .vscode/mcp.json
+   - Windsurf: ~/.windsurf/mcp.json
+   - Continue: ~/.continue/config.json
+
+2. Delete the repository:
+   rm -rf <REPO_PATH>/automad-mcp
+
+3. Optionally remove global dependencies:
+   npm uninstall -g tsx
+```
