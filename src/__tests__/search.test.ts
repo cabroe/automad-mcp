@@ -26,4 +26,20 @@ describe('searchDocs', () => {
     const result = searchDocs({ query: 'theme' });
     expect(result).toContain('automad.org');
   });
+
+  it('shows pagination info', () => {
+    const result = searchDocs({ query: 'template' });
+    expect(result).toContain('page 1');
+  });
+
+  it('handles pagination parameters', () => {
+    const result = searchDocs({ query: 'template', page: 2, perPage: 5 });
+    expect(result).toContain('page 2');
+    expect(result).toContain('Pagination');
+  });
+
+  it('shows next page link when more results exist', () => {
+    const result = searchDocs({ query: 'template', page: 1, perPage: 5 });
+    expect(result).toContain('Next');
+  });
 });
