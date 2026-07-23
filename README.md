@@ -178,6 +178,38 @@ get_block_template({ type: "pagelist", variant: "grid" })
 
 ## Development
 
+### Code Quality
+
+```bash
+# Lint (ESLint)
+npm run lint
+
+# Fix auto-fixable issues
+npm run lint:fix
+
+# Check formatting
+npm run format:check
+
+# Auto-format code
+npm run format
+```
+
+### Branch Protection
+
+The `main` branch is protected:
+- ✅ CI must pass before merging
+- ✅ No force pushes
+- ✅ No branch deletion
+- ✅ Pull requests required
+
+### Making Changes
+
+1. Create a feature branch: `git checkout -b feature/my-feature`
+2. Make changes and commit
+3. Push and create PR
+4. CI runs automatically
+5. Merge after CI passes
+
 ```bash
 # Install dependencies
 npm install
