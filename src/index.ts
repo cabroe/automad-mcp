@@ -18,6 +18,7 @@ import { generateTheme } from "./tools/theme-generator.js";
 import { generateI18n } from "./tools/i18n-generator.js";
 import { livePreview } from "./tools/live-preview.js";
 import { getDockerHelp } from "./tools/docker-help.js";
+import { getBlockTemplates, getBlockTemplate } from "./tools/block-templates.js";
 import { getTemplateSyntax } from "./tools/template-syntax.js";
 import { getCacheStats, clearAllCaches, clearCache } from "./utils/cache.js";
 import { loadConfig, parseArgs, logVerbose } from "./utils/config.js";
@@ -161,6 +162,39 @@ server.tool(
   async (args) => {
     const result = getDockerHelp({ topic: args.topic });
     return { content: [{ type: "text", text: result }] };
+  }
+);
+
+server.tool(
+  "get_block_templates",
+  "List available Automad block templates from the Starter Kit. Block templates customize how blocks (like pagelist) render in the editor.",
+  {
+    type: z.enum(["all", "pagelist", "sections"]).optional().default("all").describe("Block template type"),
+  },
+  async (args) => {
+    try {
+      const result = await getBlockTemplates({ type: args.type });
+      return { content: [{ type: "text", text: result }] };
+    } catch (err) {
+      return { content: [{ type: "text", text: `Error: ${(err as Error).message}` }], isError: true };
+    }
+  }
+);
+
+server.tool(
+  "get_block_template",
+  "Fetch a specific block template from the Automad Starter Kit. Returns the raw PHP code for customization.",
+  {
+    type: z.string().min(1).describe("Block type (e.g., 'pagelist')"),
+    variant: z.string().optional().describe("Variant name (e.g., 'grid', 'blog')"),
+  },
+  async (args) => {
+    try {
+      const result = await getBlockTemplate({ type: args.type, variant: args.variant });
+      return { content: [{ type: "text", text: result }] };
+    } catch (err) {
+      return { content: [{ type: "text", text: `Error: ${(err as Error).message}` }], isError: true };
+    }
   }
 );
 
