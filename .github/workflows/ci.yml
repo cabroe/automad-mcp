@@ -19,8 +19,8 @@ jobs:
       
       - name: Setup Node.js
         run: |
-          # Install Node 22 directly
-          curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+          # Install Node 24 directly
+          curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
           sudo apt-get install -y nodejs
           node -v
       
@@ -41,7 +41,7 @@ jobs:
       
       - name: Setup Node.js
         run: |
-          curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash -
+          curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -
           sudo apt-get install -y nodejs
           node -v
       
