@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join, resolve } from 'path';
 
@@ -16,11 +15,6 @@ export const getThemeDocInputSchema = z.object({
 });
 
 export type GetThemeDocInput = z.infer<typeof getThemeDocInputSchema>;
-
-interface ThemeDocResult {
-  content: string;
-  filePath: string;
-}
 
 /**
  * Find and read documentation from a local theme.
@@ -99,7 +93,7 @@ async function getThemeOverview(themeDir: string): Promise<string> {
   }
 
   // List all PHP files
-  const { readdir } = await import('fs/promises');
+  await import('fs/promises'); // Ensure fs/promises is loaded
   try {
     const allFiles = await getAllFiles(themeDir, []);
     const phpFiles = allFiles.filter(f => f.endsWith('.php') && !f.includes('node_modules'));

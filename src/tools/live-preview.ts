@@ -24,12 +24,15 @@ export const livePreviewInputSchema = z.object({
 
 export type LivePreviewInput = z.infer<typeof livePreviewInputSchema>;
 
-interface ServerStatus {
-  running: boolean;
-  pid?: number;
-  port?: number;
-  url?: string;
-}
+// ServerStatus type reserved for future use
+// interface ServerStatus {
+//   running: boolean;
+//   pid?: number;
+//   port?: number;
+//   url?: string;
+// }
+
+/**
 
 /**
  * Manage local development server for theme preview
@@ -121,7 +124,6 @@ async function startServer(port: number, themePath?: string): Promise<string> {
   }
 
   // Start server
-  const escapedPath = automadPath.replace(/ /g, '\\ ');
   const command = `php -S localhost:${port} -t "${automadPath}" -c "${automadPath}/.user.ini" > /dev/null 2>&1 &`;
 
   try {

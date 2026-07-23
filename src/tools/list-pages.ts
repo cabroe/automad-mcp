@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { PAGES, SECTIONS, BASE_URL, type Section } from '../utils/pages.js';
+import { PAGES, SECTIONS, BASE_URL } from '../utils/pages.js';
 
 export const listPagesInputSchema = z.object({
   section: z

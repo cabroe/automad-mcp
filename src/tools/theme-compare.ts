@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { readFile, readdir } from 'fs/promises';
+import { readdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join } from 'path';
 
@@ -26,12 +26,13 @@ interface ThemeStructure {
   hasI18n: boolean;
 }
 
-interface ComparisonResult {
-  missing: string[];
-  extra: string[];
-  different: string[];
-  same: string[];
-}
+// ComparisonResult type reserved for future use
+// interface ComparisonResult {
+//   missing: string[];
+//   extra: string[];
+//   different: string[];
+//   same: string[];
+// }
 
 /**
  * Compare two themes or a theme against the Starter Kit

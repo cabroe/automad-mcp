@@ -158,7 +158,10 @@ server.tool(
     search: z.string().optional().describe('Search snippets'),
   },
   async args => {
-    const result = getSnippets({ category: args.category as any, search: args.search });
+    const result = getSnippets({
+      category: args.category ?? 'all',
+      search: args.search,
+    });
     return { content: [{ type: 'text', text: result }] };
   }
 );
@@ -539,10 +542,12 @@ function formatError(type: string, identifier: string, message: string): string 
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
+  // eslint-disable-next-line no-console
   console.error('Automad MCP server running on stdio');
 }
 
 main().catch(err => {
+  // eslint-disable-next-line no-console
   console.error('Fatal error:', err);
   process.exit(1);
 });

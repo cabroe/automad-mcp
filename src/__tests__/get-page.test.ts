@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { getPage } from '../tools/get-page.js';
 
 describe('getPage', () => {

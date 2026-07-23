@@ -154,7 +154,6 @@ ${codeActive}
 }
 
 function formatRecursive(): string {
-  const snippet = '<@ snippet tree @>';
   const treeCode = `<@ snippet tree @>
   <ul>
     <@ foreach in pagelist @>

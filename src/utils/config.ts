@@ -33,6 +33,7 @@ export async function loadConfig(): Promise<Config> {
       const userConfig = JSON.parse(content);
       cachedConfig = { ...DEFAULT_CONFIG, ...userConfig };
     } catch (err) {
+      // eslint-disable-next-line no-console
       console.error(`Failed to load config: ${(err as Error).message}`);
       cachedConfig = DEFAULT_CONFIG;
     }
@@ -123,6 +124,7 @@ export function parseArgs(argv: string[]): {
  */
 export function logVerbose(message: string): void {
   if (cachedConfig && cachedConfig.verbose) {
+    // eslint-disable-next-line no-console
     console.error(`[verbose] ${message}`);
   }
 }

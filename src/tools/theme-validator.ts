@@ -110,7 +110,6 @@ export async function validateTheme(input: ThemeValidatorInput): Promise<string>
 
   // Check for syntax errors
   const phpFiles = await getPhpFiles(themeDir);
-  let hasSyntaxIssues = false;
   for (const file of phpFiles) {
     const content = await readFile(file, 'utf-8');
     // Check for common issues
@@ -145,7 +144,6 @@ export async function validateTheme(input: ThemeValidatorInput): Promise<string>
 
   // Score
   const passed = results.filter(r => r.passed).length;
-  const failed = results.filter(r => !r.passed).length;
   const score = Math.round((passed / results.length) * 100);
 
   const lines: string[] = [
