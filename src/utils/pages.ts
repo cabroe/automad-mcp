@@ -13,7 +13,9 @@ export const PAGES: DocPage[] = [
   // Root
   { title: "Automad", url: "/", parent: "", section: "root" },
 
-  // Getting Started
+  // Version 2
+  { title: "☀ Version 2", url: "/version-2", parent: "Automad", section: "version-2" },
+
   { title: "Getting Started", url: "/getting-started", parent: "Automad", section: "getting-started" },
   { title: "Local Installation", url: "/getting-started/local-installation", parent: "Getting Started", section: "getting-started" },
   { title: "System Requirements", url: "/getting-started/system-requirements", parent: "Getting Started", section: "getting-started" },
@@ -144,6 +146,7 @@ export const SECTIONS = [
   "user-guide",
   "developer-guide",
   "headless-mode",
+  "version-2",
 ] as const;
 
 export type Section = (typeof SECTIONS)[number];
