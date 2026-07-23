@@ -16,7 +16,6 @@ All documentation is based on [https://automad.org/version-2](https://automad.or
 - 📝 **Template Snippets** — Reusable code snippets for Automad templates
 - 🧱 **Block Layouts** — Block editor layout templates
 - 🌐 **i18n Support** — Per-tree, per-field, and mixed multilingual patterns
-- 🐳 **Docker Testing** — Setup and debugging guides for local testing
 - 🔧 **Live Preview** — Manage local dev server
 
 ## Installation
@@ -104,7 +103,7 @@ npm start
 
 | Tool | Description |
 |------|-------------|
-| `get_docker_help` | Docker setup, commands, debugging |
+
 | `live_preview` | Manage local PHP dev server |
 | `get_theme_doc` | Read local theme documentation |
 
@@ -139,13 +138,6 @@ validate_theme({ themePath: "/path/to/theme" })
 get_snippets({ category: "statements" })
 get_template_syntax({ type: "blocks" })
 get_context_patterns({ type: "foreach" })
-```
-
-### Docker Testing
-
-```
-get_docker_help({ topic: "setup" })
-get_docker_help({ topic: "debug" })
 ```
 
 ## Development
