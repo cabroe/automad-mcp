@@ -1,0 +1,14 @@
+{
+  "name": "My Theme",
+  "description": "A custom Automad theme",
+  "author": "Test",
+  "version": "1.0.0",
+  "license": "MIT",
+  "masks": {
+    "page": [],
+    "shared": []
+  },
+  "tooltips": {
+    "+main": "Main content area — use the block editor"
+  }
+}

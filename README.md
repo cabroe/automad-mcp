@@ -1,31 +1,22 @@
 # Automad MCP Server
 
-An [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server that gives AI assistants direct access to the [Automad CMS](https://automad.org) documentation and the official [Theme Starter Kit](https://github.com/automadcms/automad-theme-starter-kit).
+An [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server that gives AI assistants direct access to the [Automad CMS](https://automad.org) documentation, the official [Theme Starter Kit](https://github.com/automadcms/automad-theme-starter-kit), and theme development tools.
 
-## Tools
+## Features
 
-| Tool | Description |
-|---|---|
-| `list_pages` | Browse all ~100 documentation pages, optionally filtered by section |
-| `search_docs` | Search by keyword with relevance scoring (top 10 results) |
-| `get_page` | Fetch any Automad docs page as clean Markdown (1h cache) |
-| `list_starter_kit_files` | List all files in the official Theme Starter Kit with descriptions |
-| `get_starter_kit_file` | Read any file from the Theme Starter Kit directly from GitHub (1h cache) |
-
-## Quick Start
-
-```bash
-git clone https://github.com/cabroe/automad-mcp.git
-cd automad-mcp
-npm install
-npm start
-```
+- 📚 **Documentation** — Browse and search all Automad docs (~100 pages)
+- 🎨 **Theme Development** — Generate, validate, and compare themes
+- 📝 **Template Snippets** — Reusable code snippets for Automad templates
+- 🧱 **Block Layouts** — Block editor layout templates
+- 🌐 **i18n Support** — Per-tree, per-field, and mixed multilingual patterns
+- 🐳 **Docker Testing** — Setup and debugging guides for local testing
+- 🔧 **Live Preview** — Manage local dev server
 
 ## Installation
 
 ### Claude Desktop
 
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
 ```json
 {
@@ -37,8 +28,6 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS)
   }
 }
 ```
-
-Then restart Claude Desktop.
 
 ### Cursor
 
@@ -53,26 +42,77 @@ Open **Settings → MCP** and add:
 }
 ```
 
-### VS Code (with Copilot MCP support)
+## Quick Start
 
-Add to `.vscode/mcp.json` in your workspace:
-
-```json
-{
-  "servers": {
-    "automad-docs": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["tsx", "/absolute/path/to/automad-mcp/src/index.ts"]
-    }
-  }
-}
+```bash
+git clone https://github.com/cabroe/automad-mcp.git
+cd automad-mcp
+npm install
+npm start
 ```
 
-## Available Documentation Sections
+## Tools
+
+### Documentation
+
+| Tool | Description |
+|------|-------------|
+| `list_pages` | Browse all ~100 docs pages, filtered by section |
+| `search_docs` | Search with relevance scoring |
+| `get_page` | Fetch any docs page as Markdown (1h cache) |
+
+### Theme Starter Kit
+
+| Tool | Description |
+|------|-------------|
+| `list_starter_kit_files` | List all Starter Kit files |
+| `get_starter_kit_file` | Read any file from GitHub (1h cache) |
+| `get_block_template` | Fetch block template PHP code |
+
+### Theme Development
+
+| Tool | Description |
+|------|-------------|
+| `generate_theme` | Scaffold new theme (minimal, starter, blog, portfolio) |
+| `validate_theme` | Check theme against best practices |
+| `compare_themes` | Compare theme against Starter Kit |
+| `analyze_fields` | Analyze which fields are used |
+
+### Template Helpers
+
+| Tool | Description |
+|------|-------------|
+| `get_template_syntax` | Complete syntax reference (<@ @>, @{ }, @{ + }) |
+| `get_snippets` | Reusable code snippets (statements, variables, blocks, layout, i18n, navigation, helper) |
+| `get_context_patterns` | Context manipulation (set, with, foreach, recursive) |
+| `get_block_layouts` | Block editor layout templates |
+
+### i18n & Multilingual
+
+| Tool | Description |
+|------|-------------|
+| `generate_i18n` | Generate i18n skeleton or explain i18n patterns (per-tree, per-field, mixed) |
+
+### Testing & Preview
+
+| Tool | Description |
+|------|-------------|
+| `get_docker_help` | Docker setup, commands, debugging, troubleshooting |
+| `live_preview` | Manage local PHP dev server |
+| `get_theme_doc` | Read local theme documentation |
+
+### Cache Management
+
+| Tool | Description |
+|------|-------------|
+| `get_cache_stats` | Show cache statistics |
+| `clear_cache` | Clear specific cache |
+| `clear_all_caches` | Clear all caches |
+
+## Documentation Sections
 
 | Section | Filter value |
-|---|---|
+|---------|--------------|
 | Getting Started | `getting-started` |
 | System | `system` |
 | User Guide | `user-guide` |
@@ -82,60 +122,73 @@ Add to `.vscode/mcp.json` in your workspace:
 
 ## Usage Examples
 
-### Search
-
-```
-search_docs({ query: "template language" })
-search_docs({ query: "caching" })
-search_docs({ query: "pagelist" })
-```
-
-### Browse documentation
+### Documentation
 
 ```
 list_pages({ section: "developer-guide" })
-list_pages({ section: "system" })
-list_pages()  // all sections
-```
-
-### Read a documentation page
-
-```
-get_page({ url: "/system/caching" })
+search_docs({ query: "template language" })
 get_page({ url: "/developer-guide/building-themes/template-language" })
-get_page({ url: "https://automad.org/headless-mode" })
 ```
 
-### Explore the Theme Starter Kit
+### Theme Development
 
 ```
-list_starter_kit_files()                          // all files
-list_starter_kit_files({ directory: "blocks" })   // only block templates
-list_starter_kit_files({ directory: "client" })   // frontend source files
-
-get_starter_kit_file({ path: "README.md" })
-get_starter_kit_file({ path: "theme.json" })
-get_starter_kit_file({ path: "default.php" })
-get_starter_kit_file({ path: "blocks/pagelist/grid.php" })
+generate_theme({ name: "my-theme", template: "starter" })
+validate_theme({ themePath: "/path/to/theme" })
+compare_themes({ starterKitAsBase: true })
+analyze_fields({ themePath: "/path/to/theme" })
 ```
 
-### Typical theme development workflow
+### Template Snippets
 
 ```
-1. list_starter_kit_files()
-2. get_starter_kit_file({ path: "theme.json" })
-3. get_starter_kit_file({ path: "default.php" })
-4. get_page({ url: "/developer-guide/building-themes/template-language" })
-5. get_page({ url: "/developer-guide/building-themes/theme-json" })
+get_snippets({ category: "statements" })
+get_snippets({ category: "variables", search: "markdown" })
+get_template_syntax({ type: "blocks" })
+get_context_patterns({ type: "foreach" })
+```
+
+### i18n Patterns
+
+```
+generate_i18n({ pattern: "all" })           # Compare all patterns
+generate_i18n({ pattern: "per-tree" })     # Separate page trees
+generate_i18n({ pattern: "mixed" })         # Recommended pattern
+generate_i18n({ generate: true })           # Generate i18n.php skeleton
+```
+
+### Docker Testing
+
+```
+get_docker_help({ topic: "setup" })
+get_docker_help({ topic: "debug" })
+get_docker_help({ topic: "compose" })
+```
+
+### Block Layouts
+
+```
+get_block_layouts({ type: "all" })
+get_block_layouts({ type: "hero" })
+get_block_template({ type: "pagelist", variant: "grid" })
 ```
 
 ## Development
 
 ```bash
+# Install dependencies
+npm install
+
 # Run with hot-reload
 npm run dev
 
-# Open MCP Inspector in browser
+# Build TypeScript
+npm run build
+
+# Run tests
+npm test
+
+# Open MCP Inspector
 npm run inspect
 ```
 
@@ -143,23 +196,29 @@ npm run inspect
 
 ```
 src/
-├── index.ts                      # MCP Server + tool registration (5 tools)
+├── index.ts                    # MCP Server + all tool registrations (21 tools)
 ├── tools/
-│   ├── list-pages.ts             # list_pages
-│   ├── search.ts                 # search_docs
-│   ├── get-page.ts               # get_page
-│   ├── list-starter-kit-files.ts # list_starter_kit_files
-│   └── get-starter-kit-file.ts   # get_starter_kit_file
+│   ├── documentation/          # Docs browsing & search
+│   ├── theme/                  # Theme generation, validation, comparison
+│   ├── template/               # Snippets, syntax, contexts, blocks
+│   ├── i18n/                   # Internationalization
+│   └── testing/                # Docker, live preview, cache
 └── utils/
-    ├── pages.ts                  # Full docs page index (~100 pages)
-    ├── scraper.ts                # HTML → Markdown converter + cache
-    └── starter-kit.ts           # Starter Kit file index + GitHub constants
+    ├── cache.ts               # Fetch caching with TTL
+    ├── fetch.ts               # HTTP with retry logic
+    ├── scraper.ts             # HTML → Markdown
+    └── pages.ts               # Docs page index
 ```
 
 ## Requirements
 
 - Node.js ≥ 18
 - npm
+
+## CI/CD
+
+- **CI**: Runs on push/PR — TypeScript build + tests
+- **Release**: Creates GitHub Release + artifacts on version tags
 
 ## License
 
