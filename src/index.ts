@@ -19,6 +19,7 @@ import { generateI18n } from "./tools/i18n-generator.js";
 import { livePreview } from "./tools/live-preview.js";
 import { getDockerHelp } from "./tools/docker-help.js";
 import { getBlockTemplates, getBlockTemplate } from "./tools/block-templates.js";
+import { getContextPatterns } from "./tools/context-patterns.js";
 import { getTemplateSyntax } from "./tools/template-syntax.js";
 import { getCacheStats, clearAllCaches, clearCache } from "./utils/cache.js";
 import { loadConfig, parseArgs, logVerbose } from "./utils/config.js";
@@ -195,6 +196,18 @@ server.tool(
     } catch (err) {
       return { content: [{ type: "text", text: `Error: ${(err as Error).message}` }], isError: true };
     }
+  }
+);
+
+server.tool(
+  "get_context_patterns",
+  "Get Automad context manipulation patterns: set (mutate context), with (change context), foreach (loop variables), recursive (self-calling snippets for navigation).",
+  {
+    type: z.enum(["all", "set", "with", "foreach", "recursive"]).optional().default("all").describe("Context pattern type"),
+  },
+  async (args) => {
+    const result = getContextPatterns({ type: args.type });
+    return { content: [{ type: "text", text: result }] };
   }
 );
 
