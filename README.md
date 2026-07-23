@@ -3,7 +3,9 @@
 [![CI](https://github.com/cabroe/automad-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/cabroe/automad-mcp/actions)
 [![Tests](https://img.shields.io/badge/tests-236%20passing-brightgreen)](https://github.com/cabroe/automad-mcp/actions)
 
-An [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server that gives AI assistants direct access to the [Automad CMS](https://automad.org) documentation, the official [Theme Starter Kit](https://github.com/automadcms/automad-theme-starter-kit), and theme development tools.
+An [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server for **Automad v2** - provides AI assistants direct access to the [Automad CMS](https://automad.org) documentation, the official [Theme Starter Kit](https://github.com/automadcms/automad-theme-starter-kit), and theme development tools.
+
+> **Note:** This MCP server targets Automad v2. Automad v1 is no longer supported.
 
 ## Features
 
@@ -121,7 +123,7 @@ npm start
 | User Guide | `user-guide` |
 | Developer Guide | `developer-guide` |
 | Headless Mode | `headless-mode` |
-| Version 2 | `version-2` |
+| Version 2 (Migration) | `version-2` |
 
 ## Usage Examples
 

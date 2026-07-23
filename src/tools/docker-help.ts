@@ -57,7 +57,7 @@ project-root/
 ### Voraussetzungen
 
 - Docker + Docker Compose installiert
-- Automad Image: \`automad/automad\` (v1 = stable)
+- Automad Image: \`automad/automad:v2\` (Automad v2)
 
 ### Theme Pfad im Container
 
@@ -167,7 +167,7 @@ function formatCompose(): string {
 \`\`\`yaml
 services:
   automad:
-    image: automad/automad:v1
+    image: automad/automad:v2
     ports:
       - "8080:80"
     volumes:
