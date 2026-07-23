@@ -33,7 +33,7 @@
     "@types/node": "^20.19.43",
     "@typescript-eslint/eslint-plugin": "^8.65.0",
     "@typescript-eslint/parser": "^8.65.0",
-    "eslint": "^9.39.5",
+    "eslint": "^10.7.0",
     "eslint-plugin-import": "^2.32.0",
     "prettier": "^3.9.6",
     "tsx": "^4.19.2",
