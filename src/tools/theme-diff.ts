@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { readdir, readFile } from 'fs/promises';
+import { readdir } from 'fs/promises';
 import { existsSync } from 'fs';
 import { join } from 'path';
 

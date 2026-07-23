@@ -99,19 +99,48 @@ npm start
 |------|-------------|
 | `generate_i18n` | Generate i18n skeleton or explain i18n patterns |
 
+### Block & API Documentation
+
+| Tool | Description |
+|------|-------------|
+| `get_block_docs` | Block type documentation (text, image, gallery...) |
+| `get_api_docs` | PHP/REST/Webhooks API reference |
+| `get_cli_docs` | CLI commands documentation |
+
+### Theme Analysis & Checks
+
+| Tool | Description |
+|------|-------------|
+| `check_theme` | Schema, a11y, SEO checks |
+| `compare_theme_versions` | Compare two themes or versions |
+
+### Code Generation
+
+| Tool | Description |
+|------|-------------|
+| `generate_code` | Generate nav, pagelist, form templates |
+| `pack_theme` | Get info for theme packaging |
+
 ### Testing & Preview
 
 | Tool | Description |
 |------|-------------|
-
 | `live_preview` | Manage local PHP dev server |
 | `get_theme_doc` | Read local theme documentation |
+
+### Server Tools
+
+| Tool | Description |
+|------|-------------|
+| `get_automad_version` | Get Automad v2 info |
+| `health` | Health check endpoint |
 
 ### Cache Management
 
 | Tool | Description |
 |------|-------------|
 | `get_cache_stats` | Show cache statistics |
+| `clear_cache` | Clear specific cache |
 | `clear_cache` | Clear specific cache |
 | `clear_all_caches` | Clear all caches |
 
@@ -138,6 +167,21 @@ validate_theme({ themePath: "/path/to/theme" })
 get_snippets({ category: "statements" })
 get_template_syntax({ type: "blocks" })
 get_context_patterns({ type: "foreach" })
+```
+
+### Code Generation
+
+```
+generate_code({ type: "nav", style: "dropdown" })
+generate_code({ type: "pagelist", style: "cards" })
+```
+
+### Block & API Docs
+
+```
+get_block_docs({ type: "text" })
+get_api_docs({ type: "rest" })
+get_cli_docs({ command: "install" })
 ```
 
 ## Development

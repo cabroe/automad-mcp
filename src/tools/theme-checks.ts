@@ -51,7 +51,6 @@ export async function themeCheck(input: ThemeCheckInput): Promise<string> {
   }
 
   const passed = results.filter(r => r.passed).length;
-  const failed = results.filter(r => !r.passed).length;
   const score = Math.round((passed / results.length) * 100);
 
   const lines: string[] = [
