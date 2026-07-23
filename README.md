@@ -29,36 +29,6 @@ All documentation is based on [https://automad.org/version-2](https://automad.or
 - 🌐 **i18n Support** — Per-tree, per-field, and mixed multilingual patterns
 - 🔧 **Live Preview** — Manage local dev server
 
-## Installation
-
-### Claude Desktop
-
-Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "automad-docs": {
-      "command": "npx",
-      "args": ["tsx", "/absolute/path/to/automad-mcp/src/index.ts"]
-    }
-  }
-}
-```
-
-### Cursor
-
-Open **Settings → MCP** and add:
-
-```json
-{
-  "automad-docs": {
-    "command": "npx",
-    "args": ["tsx", "/absolute/path/to/automad-mcp/src/index.ts"]
-  }
-}
-```
-
 ## Quick Start
 
 ```bash
