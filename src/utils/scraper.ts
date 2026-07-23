@@ -7,8 +7,8 @@ interface CacheEntry {
   timestamp: number;
 }
 
-const cache = new Map<string, CacheEntry>();
-const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+export const cache = new Map<string, CacheEntry>();
+export const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 /**
  * Fetches and converts an Automad documentation page to clean Markdown.
