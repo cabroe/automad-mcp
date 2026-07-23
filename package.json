@@ -8,7 +8,9 @@
     "start": "node --import tsx/esm src/index.ts",
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "inspect": "npx @modelcontextprotocol/inspector npx tsx src/index.ts"
+    "inspect": "npx @modelcontextprotocol/inspector npx tsx src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [
     "mcp",
@@ -25,7 +27,8 @@
   "devDependencies": {
     "@types/node": "^20.0.0",
     "tsx": "^4.19.2",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^4.1.10"
   },
   "engines": {
     "node": ">=18"
