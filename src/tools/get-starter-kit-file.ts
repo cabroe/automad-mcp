@@ -5,6 +5,7 @@ import {
   STARTER_KIT_REPO,
   READABLE_FILE_EXTENSIONS,
 } from "../utils/starter-kit.js";
+import { fetchWithRetry } from "../utils/fetch.js";
 
 interface CacheEntry {
   content: string;
@@ -56,18 +57,16 @@ export async function getStarterKitFile(input: GetStarterKitFileInput): Promise<
     return cached.content;
   }
 
-  const response = await fetch(rawUrl, {
-    headers: {
-      "User-Agent": "automad-mcp/1.0",
-      Accept: "text/plain",
-    },
-  });
+  const response = await fetchWithRetry({ url: rawUrl, retries: 3, delayMs: 1000, timeoutMs: 15000 });
 
   if (!response.ok) {
     if (response.status === 404) {
       return `File not found: \`${cleanPath}\`\n\nUse the \`list_starter_kit_files\` tool to see all available files in the Automad Theme Starter Kit (https://github.com/${STARTER_KIT_REPO}).`;
     }
-    throw new Error(`Failed to fetch ${rawUrl}: HTTP ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Failed to fetch ${rawUrl}: HTTP ${response.status} ${response.statusText}. ` +
+      `This may indicate a temporary server issue. Try again in a few minutes.`
+    );
   }
 
   const text = await response.text();

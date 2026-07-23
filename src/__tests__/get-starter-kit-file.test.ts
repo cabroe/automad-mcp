@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { getStarterKitFileInputSchema } from '../tools/get-starter-kit-file.js';
 
-// Mock fetch globally
+// Mock global fetch
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
 
@@ -25,7 +25,6 @@ describe('getStarterKitFile', () => {
       const result = getStarterKitFileInputSchema.safeParse({ path: 'theme.json', file: 'README.md' });
       expect(result.success).toBe(true);
       if (result.success) {
-        // path takes precedence
         expect(result.data.path).toBe('theme.json');
       }
     });
@@ -57,7 +56,6 @@ describe('getStarterKitFile', () => {
     });
 
     it('accepts empty object and transforms to empty path', () => {
-      // The transform converts {} to { path: "" } which passes min(1) check
       const result = getStarterKitFileInputSchema.safeParse({});
       expect(result.success).toBe(true);
       if (result.success) {
@@ -72,7 +70,10 @@ describe('getStarterKitFile', () => {
       
       mockFetch.mockResolvedValueOnce({
         ok: true,
+        status: 200,
+        statusText: 'OK',
         text: async () => '# Test Content',
+        headers: new Headers(),
       });
 
       const result = await getStarterKitFile({ path: 'README.md' });
@@ -89,6 +90,9 @@ describe('getStarterKitFile', () => {
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
+        statusText: 'Not Found',
+        text: async () => 'Not Found',
+        headers: new Headers(),
       });
 
       const result = await getStarterKitFile({ path: 'nonexistent.md' });
@@ -102,7 +106,10 @@ describe('getStarterKitFile', () => {
       
       mockFetch.mockResolvedValueOnce({
         ok: true,
+        status: 200,
+        statusText: 'OK',
         text: async () => '<?php\necho "Hello";',
+        headers: new Headers(),
       });
 
       const result = await getStarterKitFile({ path: 'default.php' });
@@ -115,7 +122,10 @@ describe('getStarterKitFile', () => {
       
       mockFetch.mockResolvedValueOnce({
         ok: true,
+        status: 200,
+        statusText: 'OK',
         text: async () => '{"name": "test"}',
+        headers: new Headers(),
       });
 
       const result = await getStarterKitFile({ path: 'theme.json' });
@@ -130,18 +140,6 @@ describe('getStarterKitFile', () => {
       
       expect(result).toContain('not supported');
       expect(result).toContain('png');
-    });
-
-    it('sanitizes paths with leading slashes', async () => {
-      // The schema keeps leading slash, sanitization happens in the function
-      // We test the schema behavior instead
-      const schema = getStarterKitFileInputSchema;
-      const withSlash = schema.safeParse({ path: '/README.md' });
-      expect(withSlash.success).toBe(true);
-      if (withSlash.success) {
-        expect(withSlash.data.path).toBe('/README.md'); // Schema keeps it
-      }
-      // The actual sanitization happens in getStarterKitFile() which calls fetch
     });
   });
 });

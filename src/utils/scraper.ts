@@ -1,5 +1,6 @@
 import { parse } from "node-html-parser";
 import { BASE_URL } from "./pages.js";
+import { fetchWithRetry } from "./fetch.js";
 
 interface CacheEntry {
   content: string;
@@ -21,15 +22,13 @@ export async function fetchPage(urlOrPath: string): Promise<string> {
     return cached.content;
   }
 
-  const response = await fetch(url, {
-    headers: {
-      "User-Agent": "automad-mcp/1.0 (MCP documentation server; https://github.com/automadcms)",
-      Accept: "text/html",
-    },
-  });
+  const response = await fetchWithRetry({ url, retries: 3, delayMs: 1000, timeoutMs: 15000 });
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: HTTP ${response.status} ${response.statusText}`);
+    throw new Error(
+      `Failed to fetch ${url}: HTTP ${response.status} ${response.statusText}. ` +
+      `This may indicate a temporary server issue. Try again in a few minutes.`
+    );
   }
 
   const html = await response.text();
