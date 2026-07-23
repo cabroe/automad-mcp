@@ -1,36 +1,31 @@
 # Automad MCP Server
 
-An [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server that gives AI assistants access to the [Automad CMS documentation](https://automad.org).
+An [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server that gives AI assistants direct access to the [Automad CMS](https://automad.org) documentation and the official [Theme Starter Kit](https://github.com/automadcms/automad-theme-starter-kit).
 
-## Features
+## Tools
 
-- **`list_pages`** – Browse all ~100 documentation pages, optionally filtered by section
-- **`search_docs`** – Search by keyword with relevance scoring
-- **`get_page`** – Fetch any documentation page as clean Markdown (with in-memory caching)
+| Tool | Description |
+|---|---|
+| `list_pages` | Browse all ~100 documentation pages, optionally filtered by section |
+| `search_docs` | Search by keyword with relevance scoring (top 10 results) |
+| `get_page` | Fetch any Automad docs page as clean Markdown (1h cache) |
+| `list_starter_kit_files` | List all files in the official Theme Starter Kit with descriptions |
+| `get_starter_kit_file` | Read any file from the Theme Starter Kit directly from GitHub (1h cache) |
 
 ## Quick Start
 
 ```bash
+git clone https://github.com/cabroe/automad-mcp.git
+cd automad-mcp
 npm install
 npm start
 ```
 
-## Usage with Claude Desktop
+## Installation
 
-Add the following to your `claude_desktop_config.json`:
+### Claude Desktop
 
-```json
-{
-  "mcpServers": {
-    "automad-docs": {
-      "command": "node",
-      "args": ["--import", "tsx/esm", "/absolute/path/to/automad-mcp/src/index.ts"]
-    }
-  }
-}
-```
-
-Or using `npx tsx` directly:
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
 
 ```json
 {
@@ -43,9 +38,11 @@ Or using `npx tsx` directly:
 }
 ```
 
-## Usage with Cursor / VS Code
+Then restart Claude Desktop.
 
-Add to your MCP settings:
+### Cursor
+
+Open **Settings → MCP** and add:
 
 ```json
 {
@@ -54,6 +51,82 @@ Add to your MCP settings:
     "args": ["tsx", "/absolute/path/to/automad-mcp/src/index.ts"]
   }
 }
+```
+
+### VS Code (with Copilot MCP support)
+
+Add to `.vscode/mcp.json` in your workspace:
+
+```json
+{
+  "servers": {
+    "automad-docs": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["tsx", "/absolute/path/to/automad-mcp/src/index.ts"]
+    }
+  }
+}
+```
+
+## Available Documentation Sections
+
+| Section | Filter value |
+|---|---|
+| Getting Started | `getting-started` |
+| System | `system` |
+| User Guide | `user-guide` |
+| Developer Guide | `developer-guide` |
+| Headless Mode | `headless-mode` |
+| Version 2 | `version-2` |
+
+## Usage Examples
+
+### Search
+
+```
+search_docs({ query: "template language" })
+search_docs({ query: "caching" })
+search_docs({ query: "pagelist" })
+```
+
+### Browse documentation
+
+```
+list_pages({ section: "developer-guide" })
+list_pages({ section: "system" })
+list_pages()  // all sections
+```
+
+### Read a documentation page
+
+```
+get_page({ url: "/system/caching" })
+get_page({ url: "/developer-guide/building-themes/template-language" })
+get_page({ url: "https://automad.org/headless-mode" })
+```
+
+### Explore the Theme Starter Kit
+
+```
+list_starter_kit_files()                          // all files
+list_starter_kit_files({ directory: "blocks" })   // only block templates
+list_starter_kit_files({ directory: "client" })   // frontend source files
+
+get_starter_kit_file({ path: "README.md" })
+get_starter_kit_file({ path: "theme.json" })
+get_starter_kit_file({ path: "default.php" })
+get_starter_kit_file({ path: "blocks/pagelist/grid.php" })
+```
+
+### Typical theme development workflow
+
+```
+1. list_starter_kit_files()
+2. get_starter_kit_file({ path: "theme.json" })
+3. get_starter_kit_file({ path: "default.php" })
+4. get_page({ url: "/developer-guide/building-themes/template-language" })
+5. get_page({ url: "/developer-guide/building-themes/theme-json" })
 ```
 
 ## Development
@@ -66,54 +139,27 @@ npm run dev
 npm run inspect
 ```
 
-## Available Sections
-
-| Section | URL prefix |
-|---|---|
-| Getting Started | `/getting-started` |
-| System | `/system` |
-| User Guide | `/user-guide` |
-| Developer Guide | `/developer-guide` |
-| Headless Mode | `/headless-mode` |
-
-## Examples
-
-### Search for something
-
-```
-search_docs({ query: "template language" })
-search_docs({ query: "caching" })
-search_docs({ query: "pagelist" })
-```
-
-### List pages in a section
-
-```
-list_pages({ section: "developer-guide" })
-list_pages({ section: "system" })
-list_pages() // all pages
-```
-
-### Read a page
-
-```
-get_page({ url: "/system/caching" })
-get_page({ url: "https://automad.org/developer-guide/building-themes/template-language" })
-```
-
 ## Architecture
 
 ```
 src/
-├── index.ts              # MCP Server + tool registration
+├── index.ts                      # MCP Server + tool registration (5 tools)
 ├── tools/
-│   ├── list-pages.ts     # list_pages tool
-│   ├── search.ts         # search_docs tool
-│   └── get-page.ts       # get_page tool
+│   ├── list-pages.ts             # list_pages
+│   ├── search.ts                 # search_docs
+│   ├── get-page.ts               # get_page
+│   ├── list-starter-kit-files.ts # list_starter_kit_files
+│   └── get-starter-kit-file.ts   # get_starter_kit_file
 └── utils/
-    ├── pages.ts          # Full documentation page index (~100 pages)
-    └── scraper.ts        # HTML → Markdown converter with caching
+    ├── pages.ts                  # Full docs page index (~100 pages)
+    ├── scraper.ts                # HTML → Markdown converter + cache
+    └── starter-kit.ts           # Starter Kit file index + GitHub constants
 ```
+
+## Requirements
+
+- Node.js ≥ 18
+- npm
 
 ## License
 
