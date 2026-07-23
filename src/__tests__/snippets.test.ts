@@ -13,8 +13,8 @@ describe('getSnippets', () => {
   });
 
   it('filters by category', () => {
-    const result = getSnippets({ category: 'template' });
-    expect(result).toContain('template');
+    const result = getSnippets({ category: 'variables' });
+    expect(result).toContain('variable');
     expect(result).toContain('@{');
   });
 
@@ -38,8 +38,8 @@ describe('getSnippetCategories', () => {
 
   it('contains expected categories', () => {
     const categories = getSnippetCategories();
-    expect(categories).toContain('template');
-    expect(categories).toContain('block');
-    expect(categories).toContain('layout');
+    expect(categories).toContain('statements');
+    expect(categories).toContain('variables');
+    expect(categories).toContain('blocks');
   });
 });

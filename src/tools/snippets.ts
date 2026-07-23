@@ -2,10 +2,10 @@ import { z } from "zod";
 
 export const snippetsInputSchema = z.object({
   category: z
-    .enum(["all", "template", "block", "layout", "i18n", "navigation", "helper"])
+    .enum(["all", "statements", "variables", "blocks", "layout", "i18n", "navigation", "helper"])
     .optional()
     .default("all")
-    .describe("Filter snippets by category"),
+    .describe("Filter by category"),
   search: z
     .string()
     .optional()
@@ -19,272 +19,223 @@ interface Snippet {
   category: string;
   description: string;
   code: string;
-  example?: string;
+  note?: string;
 }
 
 const SNIPPETS: Snippet[] = [
-  // Template Syntax
-  {
-    name: "Variable Output",
-    category: "template",
-    description: "Output a variable with optional default",
-    code: `@{ variableName | def('default value') }`,
-    example: `@{ title | def('Untitled') }`,
-  },
-  {
-    name: "Markdown Content",
-    category: "template",
-    description: "Render markdown content",
-    code: `@{ variable | markdown }`,
-    example: `@{ textTeaser | markdown }`,
-  },
-  {
-    name: "Conditional Block",
-    category: "template",
-    description: "Show content only if variable exists",
-    code: `<@ if @{ variable } @>
-    Content here
-<@ end @>`,
-    example: `<@ if @{ image } @>
-    <img src="@{ image }">
-<@ end @>`,
-  },
-  {
-    name: "If-Else Block",
-    category: "template",
-    description: "Show alternative content based on condition",
-    code: `<@ if @{ variable } @>
-    True content
-<@ else @>
-    False content
-<@ end @>`,
-  },
-  {
-    name: "Loop (foreach)",
-    category: "template",
-    description: "Iterate over pagelist or tags",
-    code: `<@ foreach @{ items } as $item @>
-    <div>$item->get('title')</div>
-<@ end @>`,
-    example: `<@ foreach @{ :pagelist } as $page @>
-    <a href="$page->get('url')">$page->get('title')</a>
-<@ end @>`,
-  },
-  {
-    name: "Set Runtime Variable",
-    category: "template",
-    description: "Define a variable for use in template",
-    code: `<@ set { :myVar: 'value' } @>`,
-    example: `<@ set { :theme: @{ selectColorTheme | def('dark') } } @>`,
-  },
-
-  // Block Editor
-  {
-    name: "Main Content Block",
-    category: "block",
-    description: "Block editor main content area",
-    code: `@{ +main }`,
-    example: `<div class="content">@{ +main }</div>`,
-  },
-  {
-    name: "Named Block Area",
-    category: "block",
-    description: "Additional block area (e.g., for hero section)",
-    code: `@{ +hero }`,
-    example: `<section class="hero">@{ +hero }</section>`,
-  },
-  {
-    name: "Block Container",
-    category: "block",
-    description: "Proper container for block content",
-    code: `<div class="am-block">
-    @{ +main }
-</div>`,
-  },
-  {
-    name: "Block Width Styling",
-    category: "block",
-    description: "CSS for proper block layout",
-    code: `:root {
-    --am-block-max-width: 50rem;
-    --am-container-padding: 2rem;
-}`,
-  },
-
-  // Layout / Inheritance
+  // Statements (mit <@ @>)
   {
     name: "Include Component",
-    category: "layout",
-    description: "Include a reusable component file",
-    code: `<@ components/filename.php @>`,
-    example: `<@ components/nav.php @>`,
+    category: "statements",
+    description: "Lädt eine Component-Datei",
+    code: '<@ components/nav.php @>',
+    note: "Mit <@ @> Klammern!",
   },
   {
-    name: "Define Snippet",
-    category: "layout",
-    description: "Create a reusable snippet",
-    code: `<@~ snippet mySnippet ~@>
-    Snippet content
-<@~ end ~@>`,
-    example: `<@~ snippet article ~@>
-    <article>
-        <h1>@{ title }</h1>
-        @{ +main }
-    </article>
-<@~ end ~@>`,
+    name: "If-Block",
+    category: "statements",
+    description: "Bedingte Anzeige",
+    code: '<@ if @{ variable } @>\n    Content\n<@ end @>',
   },
   {
-    name: "Call Snippet",
-    category: "layout",
-    description: "Execute a defined snippet",
-    code: `<@ mySnippet @>`,
+    name: "If-Else-Block",
+    category: "statements",
+    description: "Bedingte Anzeige mit Alternative",
+    code: '<@ if @{ variable } @>\n    True\n<@ else @>\n    False\n<@ end @>',
   },
   {
-    name: "Override Snippet (Inheritance)",
-    category: "layout",
-    description: "Override snippet in derived template",
-    code: `<@ master_template.php @>
+    name: "Foreach-Loop",
+    category: "statements",
+    description: "Über Liste iterieren",
+    code: '<@ foreach @{ items } as $item @>\n    <div>$item->get(\'title\')</div>\n<@ end @>',
+  },
+  {
+    name: "Set Variable",
+    category: "statements",
+    description: "Runtime-Variable setzen",
+    code: '<@ set { :myVar: "value" } @>',
+    note: "Für Theme-Wechsel etc.",
+  },
+  {
+    name: "Snippet Definieren",
+    category: "statements",
+    description: "Wiederverwendbares Snippet erstellen",
+    code: '<@~ snippet name ~@>\n    Content\n<@~ end ~@>',
+    note: "~ statt normale Klammern!",
+  },
+  {
+    name: "Snippet Aufrufen",
+    category: "statements",
+    description: "Definiertes Snippet ausführen",
+    code: '<@ meinSnippet @>',
+  },
 
-<@~ snippet article ~@>
-    <!-- New implementation -->
-<@~ end ~@>`,
+  // Variablen (@{ })
+  {
+    name: "Page Variable",
+    category: "variables",
+    description: "Feld-Wert aus Dashboard",
+    code: "@{ title }",
+    note: "OHNE <@ @> Klammern!",
   },
   {
-    name: "Snippets must be top-level",
-    category: "layout",
-    description: "Important: snippet overrides must be at template root",
-    code: `<!-- CORRECT: Override on top level -->
-<@ include.php @>
-<@~ snippet nested ~@><@~ end ~@>
+    name: "Mit Default",
+    category: "variables",
+    description: "Fallback wenn leer",
+    code: "@{ title | def('Default Title') }",
+  },
+  {
+    name: "Markdown rendern",
+    category: "variables",
+    description: "Markdown zu HTML",
+    code: "@{ text | markdown }",
+  },
+  {
+    name: "Runtime Variable",
+    category: "variables",
+    description: "System-Variable (immer mit :)",
+    code: "@{ :lang }\n@{ :url }\n@{ :theme }",
+  },
+  {
+    name: "Pipes kombinieren",
+    category: "variables",
+    description: "Mehrere Filter ketten",
+    code: "@{ text | stripTags | shorten (150) | markdown }",
+  },
 
-<!-- WRONG: Nested snippet override -->
-<@ include.php @>
-<@~ snippet outer ~@>
-    <@~ snippet nested ~@><@~ end ~@>
-<@~ end ~@>`,
+  // Block (@{ + })
+  {
+    name: "Main Content Block",
+    category: "blocks",
+    description: "Block-Editor Hauptbereich",
+    code: "@{ +main }",
+    note: "OHNE <@ @>! Plus mit Leerzeichen!",
+  },
+  {
+    name: "Benannter Block",
+    category: "blocks",
+    description: "Extra Block-Bereich (Hero, etc.)",
+    code: "@{ +hero }\n@{ +sidebar }",
+  },
+  {
+    name: "Block mit Wrapper",
+    category: "blocks",
+    description: "Block im Container",
+    code: "<div class=\"content\">\n    @{ +main }\n</div>",
+  },
+
+  // Layout
+  {
+    name: "Component-Based Layout",
+    category: "layout",
+    description: "Master-Template mit Includes",
+    code: '<@ components/page.php @>',
+  },
+  {
+    name: "Snippet Override",
+    category: "layout",
+    description: "Snippet nach Include überschreiben",
+    code: '<@ components/page.php @>\n\n<@~ snippet article ~@>\n    Neu Inhalt\n<@~ end ~@>',
+  },
+  {
+    name: "Navbar Component",
+    category: "layout",
+    description: "Navigation einbinden",
+    code: '<@ components/nav.php @>',
+  },
+  {
+    name: "Footer Component",
+    category: "layout",
+    description: "Footer einbinden",
+    code: '<@ components/footer.php @>',
   },
 
   // i18n
   {
-    name: "Translation Helper",
+    name: "Übersetzung",
     category: "i18n",
-    description: "Get translated string by key",
-    code: `<@ t { key: 'section.title' } @>`,
-    example: `<@ t { key: 'nav.products', lang: 'de' } @>`,
+    description: "Text aus Wörterbuch holen",
+    code: '<@ t { key: "nav.products" } @>',
   },
   {
-    name: "Translation with Placeholder",
+    name: "Übersetzung mit Platzhalter",
     category: "i18n",
-    description: "Replace placeholders in translation",
-    code: `<@ t { key: 'message.text', name: 'John', count: 5 } @>`,
-    example: `// i18n.php
-'message.text' => 'Hello {name}, you have {count} items'`,
+    description: "Platzhalter ersetzen",
+    code: '<@ t { key: "msg.text", name: "Max" } @>',
+    note: "In i18n.php: 'msg.text' => 'Hallo {name}'",
   },
   {
-    name: "Language Switch Link",
+    name: "Sprach-Link",
     category: "i18n",
-    description: "Link to switch between languages",
-    code: `<@ langSwitchLink @>`,
-    example: `<nav>
-    <@ langSwitchLink @>
-</nav>`,
-  },
-  {
-    name: "Language from Runtime",
-    category: "i18n",
-    description: "Get current language from Automad",
-    code: `@{ :lang }`,
-    example: `<html lang="@{ :lang | def('de') }">`,
+    description: "Link zur anderen Sprache",
+    code: "<@ langSwitchLink @>",
   },
 
   // Navigation
   {
     name: "Navigation Tree",
     category: "navigation",
-    description: "Full site navigation tree",
-    code: `<@ navTree @>`,
+    description: "Vollständige Navigation",
+    code: "<@ navTree @>",
   },
   {
     name: "Breadcrumbs",
     category: "navigation",
-    description: "Show current page path",
-    code: `<@ breadcrumbs @>`,
+    description: "Pfad-Anzeige",
+    code: "<@ breadcrumbs @>",
   },
   {
     name: "Page List",
     category: "navigation",
-    description: "List of pages (children/siblings/all)",
-    code: `<@ newPagelist { type: 'children' } @>
-<@ foreach @pagelist as $page @>
-    <a href="$page->get('url')">$page->get('title')</a>
-<@ end @>`,
-    example: `<@ newPagelist { type: 'children', sort: 'date desc' } @>`,
+    description: "Liste von Seiten",
+    code: "<@ newPagelist { type: 'children' } @>",
   },
   {
-    name: "Link to Page",
+    name: "Page List mit Loop",
     category: "navigation",
-    description: "Create link to specific page",
-    code: `<@ nav { url: '/blog' } @>`,
-    example: `<@ nav { url: '/blog', label: 'Blog' } @>`,
+    description: "Seiten durchgehen",
+    code: "<@ newPagelist { type: 'children', sort: 'date desc' } @>\n<@ foreach @pagelist as $page @>\n    <a href=\"$page->get('url')\">$page->get('title')</a>\n<@ end @>",
   },
 
-  // Helpers
+  // Helper
   {
-    name: "Image with Processing",
+    name: "Bild mit Processing",
     category: "helper",
-    description: "Responsive image with auto-resize",
-    code: `<@ img { src: '@{ image }', width: 800 } @>`,
-    example: `<@ img { src: '@{ imageTeaser }', width: 1200, alt: '@{ title }' } @>`,
+    description: "Responsives Bild",
+    code: "<@ img { src: '@{ image }', width: 800 } @>",
   },
   {
-    name: "File List",
+    name: "Datum formatieren",
     category: "helper",
-    description: "List files from a directory",
-    code: `<@ filelist { path: '/shared/downloads' } @>`,
+    description: "Datum umwandeln",
+    code: "@{ date | dateFormat ('d. F Y') }",
   },
   {
-    name: "Markdown Pipeline",
+    name: "Text kürzen",
     category: "helper",
-    description: "Chain multiple transformations",
-    code: `@{ text | stripTags | shorten (200) | markdown }`,
-    example: `@{ textTeaser | stripTags | 150 | markdown }`,
+    description: "Auf Zeichen limitieren",
+    code: "@{ text | shorten (200) }",
   },
   {
-    name: "Date Formatting",
+    name: "URL-sicher machen",
     category: "helper",
-    description: "Format a date string",
-    code: `@{ date | dateFormat ('d. F Y') }`,
-    example: `@{ :created | dateFormat ('j. M Y') }`,
-  },
-  {
-    name: "Escape for HTML",
-    category: "helper",
-    description: "Escape special characters",
-    code: `@{ variable | escape }`,
-  },
-  {
-    name: "URL Sanitize",
-    category: "helper",
-    description: "Make string URL-safe",
-    code: `@{ title | sanitize }`,
-    example: `<a href="/blog/@{ slug | sanitize }">@{ title }</a>`,
+    description: "Für URLs bereinigen",
+    code: "@{ title | sanitize }",
   },
 ];
 
 /**
- * Get available snippets
+ * Get snippets filtered by category or search
  */
 export function getSnippets(input: SnippetsInput): string {
   const { category, search } = input;
 
   let filtered = SNIPPETS;
 
-  // Filter by category
   if (category !== "all") {
     filtered = filtered.filter((s) => s.category === category);
   }
 
-  // Filter by search term
   if (search) {
     const searchLower = search.toLowerCase();
     filtered = filtered.filter(
@@ -296,7 +247,7 @@ export function getSnippets(input: SnippetsInput): string {
   }
 
   if (filtered.length === 0) {
-    return `No snippets found${search ? ` for "${search}"` : ""}.\n\nTry a different search term or use \`category: "all"\`.`;
+    return `No snippets found${search ? ` for "${search}"` : ""}.\n\nCategories: statements, variables, blocks, layout, i18n, navigation, helper`;
   }
 
   // Group by category
@@ -309,43 +260,43 @@ export function getSnippets(input: SnippetsInput): string {
   }
 
   const lines: string[] = [
-    `## Automad Snippets (${filtered.length} found)\n`,
-    "Categories: template, block, layout, i18n, navigation, helper\n",
+    `## Snippets (${filtered.length} found)\n`,
+    "Categories: statements, variables, blocks, layout, i18n, navigation, helper\n",
   ];
 
   for (const [cat, snippets] of grouped) {
-    lines.push(`### ${formatCategory(cat)}`);
+    lines.push(`\n### ${formatCategory(cat)}`);
     for (const s of snippets) {
       lines.push(`\n**${s.name}**`);
-      lines.push(`\n_${s.description}_`);
+      lines.push(`_${s.description}_`);
       lines.push("\n```");
       lines.push(s.code);
       lines.push("```");
-      if (s.example) {
-        lines.push(`_Example: \`${s.example}\`_`);
+      if (s.note) {
+        lines.push(`⚠️ ${s.note}`);
       }
     }
-    lines.push("");
   }
+
+  lines.push("\n---\n");
+  lines.push("\n**Tipp:** Nutze `get_template_syntax` für eine vollständige Syntax-Referenz!\n");
 
   return lines.join("\n");
 }
 
 function formatCategory(cat: string): string {
   const map: Record<string, string> = {
-    template: "📝 Template Syntax",
-    block: "🧱 Block Editor",
-    layout: "🎨 Layout & Inheritance",
-    i18n: "🌐 Internationalization (i18n)",
+    statements: "📋 Statements `<@ @>`",
+    variables: "🔧 Variablen `@{ }`",
+    blocks: "🧱 Blocks `@{ + }`",
+    layout: "🎨 Layout & Components",
+    i18n: "🌐 Internationalisierung",
     navigation: "🧭 Navigation",
-    helper: "🛠️ Helper Functions",
+    helper: "🛠️ Helper Funktionen",
   };
   return map[cat] ?? cat;
 }
 
-/**
- * Get snippet categories
- */
 export function getSnippetCategories(): string[] {
   return [...new Set(SNIPPETS.map((s) => s.category))];
 }

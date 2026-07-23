@@ -17,6 +17,7 @@ import { compareThemes } from "./tools/theme-compare.js";
 import { generateTheme } from "./tools/theme-generator.js";
 import { generateI18n } from "./tools/i18n-generator.js";
 import { livePreview } from "./tools/live-preview.js";
+import { getTemplateSyntax } from "./tools/template-syntax.js";
 import { getCacheStats, clearAllCaches, clearCache } from "./utils/cache.js";
 import { loadConfig, parseArgs, logVerbose } from "./utils/config.js";
 
@@ -127,13 +128,25 @@ server.tool(
 
 server.tool(
   "get_snippets",
-  "Get reusable Automad template snippets.",
+  "Get reusable Automad template snippets. Categories: statements, variables, blocks, layout, i18n, navigation, helper",
   {
-    category: z.enum(["all", "template", "block", "layout", "i18n", "navigation", "helper"]).optional().default("all").describe("Filter by category"),
+    category: z.enum(["all", "statements", "variables", "blocks", "layout", "i18n", "navigation", "helper"]).optional().default("all").describe("Filter by category"),
     search: z.string().optional().describe("Search snippets"),
   },
   async (args) => {
-    const result = getSnippets({ category: args.category, search: args.search });
+    const result = getSnippets({ category: args.category as any, search: args.search });
+    return { content: [{ type: "text", text: result }] };
+  }
+);
+
+server.tool(
+  "get_template_syntax",
+  "Get comprehensive Automad template syntax reference. Explains the difference between statements (<@ @>), variables (@{ }), and blocks (@{ + }). Includes debugging tips.",
+  {
+    type: z.enum(["all", "statements", "variables", "blocks", "snippets", "debug"]).optional().default("all").describe("Filter by type"),
+  },
+  async (args) => {
+    const result = getTemplateSyntax({ type: args.type });
     return { content: [{ type: "text", text: result }] };
   }
 );
