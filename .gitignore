@@ -4,3 +4,7 @@ dist/
 *.d.ts.map
 .env
 .DS_Store
+
+# ESLint & Prettier
+.eslintcache
+.prettier-cache

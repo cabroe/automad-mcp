@@ -268,7 +268,7 @@ a { color: var(--color-link); }
     path: "lib/functions.php",
     content: `<?php
 
-use Automad\Core\Automad;
+use Automad\\Core\\Automad;
 
 /**
  * Add your helper functions here.

@@ -11,7 +11,11 @@
     "inspect": "npx @modelcontextprotocol/inspector npx tsx src/index.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "refresh:pages": "npx tsx bin/refresh-pages.ts"
+    "refresh:pages": "npx tsx bin/refresh-pages.ts",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\""
   },
   "keywords": [
     "mcp",
@@ -27,6 +31,11 @@
   },
   "devDependencies": {
     "@types/node": "^20.19.43",
+    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/parser": "^8.65.0",
+    "eslint": "^9.39.5",
+    "eslint-plugin-import": "^2.32.0",
+    "prettier": "^3.9.6",
     "tsx": "^4.19.2",
     "typescript": "^5.0.0",
     "vitest": "^4.1.10"
