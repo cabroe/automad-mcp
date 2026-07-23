@@ -282,16 +282,17 @@ server.tool(
 
 server.tool(
   "generate_i18n",
-  "Generate or analyze translations for a theme.",
+  "Generate translations, analyze templates, or explain i18n patterns. Use pattern='all' (default) to see pattern comparison, or specific pattern for detailed explanation.",
   {
     templatePath: z.string().optional().describe("Template file to scan"),
     themePath: z.string().optional().describe("Theme to scan"),
     generate: z.boolean().optional().default(false).describe("Generate i18n.php skeleton"),
     languages: z.string().optional().default("de,en").describe("Comma-separated languages"),
+    pattern: z.enum(["all", "per-tree", "per-field", "mixed"]).optional().default("all").describe("i18n pattern to explain"),
   },
   async (args) => {
     try {
-      const result = await generateI18n({ templatePath: args.templatePath, themePath: args.themePath, generate: args.generate, languages: args.languages });
+      const result = await generateI18n({ templatePath: args.templatePath, themePath: args.themePath, generate: args.generate, languages: args.languages, pattern: args.pattern });
       return { content: [{ type: "text", text: result }] };
     } catch (err) {
       return { content: [{ type: "text", text: `Error: ${(err as Error).message}` }], isError: true };
