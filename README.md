@@ -14,7 +14,6 @@ An [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server for **
 | Lint | ✅ 0 Warnings |
 | Format | ✅ OK |
 | Tools | ✅ 39 dokumentiert |
-| Branch Protection | ✅ Aktiv |
 
 ## Documentation
 
@@ -196,14 +195,6 @@ npm run lint      # ESLint
 npm run format   # Prettier
 npm test         # Run tests
 ```
-
-### Branch Protection
-
-The `main` branch is protected:
-- ✅ CI must pass before merging
-- ✅ No force pushes
-- ✅ No branch deletion
-- ✅ Pull requests required
 
 ## Requirements
 
