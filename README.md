@@ -1,7 +1,8 @@
 # Automad MCP Server
 
 [![CI](https://github.com/cabroe/automad-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/cabroe/automad-mcp/actions)
-[![Tests](https://img.shields.io/badge/tests-218%20passing-brightgreen)](https://github.com/cabroe/automad-mcp/actions)
+[![Vulnerabilities](https://img.shields.io/badge/vulnerabilities-0-brightgreen)](https://github.com/cabroe/automad-mcp/security)
+[![Tests](https://img.shields.io/badge/tests-210%20passing-brightgreen)](https://github.com/cabroe/automad-mcp/actions)
 
 An [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server for **Automad v2** — provides AI assistants direct access to the [Automad CMS v2](https://automad.org/version-2) documentation, the official [Theme Starter Kit](https://github.com/automadcms/automad-theme-starter-kit), and theme development tools.
 

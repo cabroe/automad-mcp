@@ -34,6 +34,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Infrastructure
 
 - TypeScript with strict mode
-- 236+ tests with Vitest
+- 210 tests with Vitest
 - Fetch caching with TTL
 - Retry logic for network failures
