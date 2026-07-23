@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 import {
   STARTER_KIT_RAW_BASE,
   STARTER_KIT_HTML_BASE,
   STARTER_KIT_REPO,
   READABLE_FILE_EXTENSIONS,
-} from "../utils/starter-kit.js";
-import { fetchWithRetry } from "../utils/fetch.js";
+} from '../utils/starter-kit.js';
+import { fetchWithRetry } from '../utils/fetch.js';
 
 interface CacheEntry {
   content: string;
@@ -15,24 +15,26 @@ interface CacheEntry {
 export const cache = new Map<string, CacheEntry>();
 export const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
-export const getStarterKitFileInputSchema = z.object({
-  path: z
-    .string()
-    .min(1)
-    .optional()
-    .describe(
-      "Path to the file in the starter kit repo, e.g. 'README.md', 'default.php', 'theme.json', 'blocks/pagelist/grid.php'. Use list_starter_kit_files to discover valid paths."
-    ),
-  file: z
-    .string()
-    .min(1)
-    .optional()
-    .describe(
-      "Alias for 'path'. File path within the repo, e.g. 'README.md', 'default.php', 'theme.json', 'blocks/pagelist/grid.php'."
-    ),
-}).transform((data) => ({
-  path: data.path ?? data.file ?? "",
-}));
+export const getStarterKitFileInputSchema = z
+  .object({
+    path: z
+      .string()
+      .min(1)
+      .optional()
+      .describe(
+        "Path to the file in the starter kit repo, e.g. 'README.md', 'default.php', 'theme.json', 'blocks/pagelist/grid.php'. Use list_starter_kit_files to discover valid paths."
+      ),
+    file: z
+      .string()
+      .min(1)
+      .optional()
+      .describe(
+        "Alias for 'path'. File path within the repo, e.g. 'README.md', 'default.php', 'theme.json', 'blocks/pagelist/grid.php'."
+      ),
+  })
+  .transform(data => ({
+    path: data.path ?? data.file ?? '',
+  }));
 
 export type GetStarterKitFileInput = z.infer<typeof getStarterKitFileInputSchema>;
 
@@ -40,12 +42,12 @@ export async function getStarterKitFile(input: GetStarterKitFileInput): Promise<
   const { path } = input;
 
   // Sanitize path
-  const cleanPath = path.replace(/^\/+/, "");
+  const cleanPath = path.replace(/^\/+/, '');
 
   // Validate file extension is readable
   const ext = getExtension(cleanPath);
   if (ext && !READABLE_FILE_EXTENSIONS.has(ext)) {
-    return `File type \`${ext}\` is not supported for reading (binary file). Supported extensions: ${[...READABLE_FILE_EXTENSIONS].join(", ")}`;
+    return `File type \`${ext}\` is not supported for reading (binary file). Supported extensions: ${[...READABLE_FILE_EXTENSIONS].join(', ')}`;
   }
 
   const rawUrl = `${STARTER_KIT_RAW_BASE}/${cleanPath}`;
@@ -57,7 +59,12 @@ export async function getStarterKitFile(input: GetStarterKitFileInput): Promise<
     return cached.content;
   }
 
-  const response = await fetchWithRetry({ url: rawUrl, retries: 3, delayMs: 1000, timeoutMs: 15000 });
+  const response = await fetchWithRetry({
+    url: rawUrl,
+    retries: 3,
+    delayMs: 1000,
+    timeoutMs: 15000,
+  });
 
   if (!response.ok) {
     if (response.status === 404) {
@@ -65,7 +72,7 @@ export async function getStarterKitFile(input: GetStarterKitFileInput): Promise<
     }
     throw new Error(
       `Failed to fetch ${rawUrl}: HTTP ${response.status} ${response.statusText}. ` +
-      `This may indicate a temporary server issue. Try again in a few minutes.`
+        `This may indicate a temporary server issue. Try again in a few minutes.`
     );
   }
 
@@ -83,33 +90,33 @@ function formatFileContent(path: string, content: string, lang: string, htmlUrl:
     `**Source**: ${htmlUrl}\n`,
     `\`\`\`${lang}`,
     content.trimEnd(),
-    "```",
-  ].join("\n");
+    '```',
+  ].join('\n');
 }
 
 function getExtension(path: string): string {
-  const dot = path.lastIndexOf(".");
-  if (dot === -1) return "";
+  const dot = path.lastIndexOf('.');
+  if (dot === -1) return '';
   return path.slice(dot).toLowerCase();
 }
 
 function getLang(path: string): string {
   const ext = getExtension(path);
   const map: Record<string, string> = {
-    ".php": "php",
-    ".js": "javascript",
-    ".ts": "typescript",
-    ".json": "json",
-    ".md": "markdown",
-    ".css": "css",
-    ".less": "less",
-    ".sh": "bash",
-    ".html": "html",
-    ".xml": "xml",
-    ".yaml": "yaml",
-    ".yml": "yaml",
-    ".txt": "text",
-    ".env": "bash",
+    '.php': 'php',
+    '.js': 'javascript',
+    '.ts': 'typescript',
+    '.json': 'json',
+    '.md': 'markdown',
+    '.css': 'css',
+    '.less': 'less',
+    '.sh': 'bash',
+    '.html': 'html',
+    '.xml': 'xml',
+    '.yaml': 'yaml',
+    '.yml': 'yaml',
+    '.txt': 'text',
+    '.env': 'bash',
   };
-  return map[ext] ?? "";
+  return map[ext] ?? '';
 }

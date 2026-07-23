@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const blockLayoutsInputSchema = z.object({
   type: z
-    .enum(["all", "hero", "gallery", "faq", "team", "pricing", "testimonials", "cta"])
+    .enum(['all', 'hero', 'gallery', 'faq', 'team', 'pricing', 'testimonials', 'cta'])
     .optional()
-    .default("all")
-    .describe("Filter by layout type"),
+    .default('all')
+    .describe('Filter by layout type'),
 });
 
 export type BlockLayoutsInput = z.infer<typeof blockLayoutsInputSchema>;
@@ -21,9 +21,9 @@ interface BlockLayout {
 
 const BLOCK_LAYOUTS: BlockLayout[] = [
   {
-    name: "Hero Section",
-    type: "hero",
-    description: "Full-width hero with title, subtitle, and CTA button",
+    name: 'Hero Section',
+    type: 'hero',
+    description: 'Full-width hero with title, subtitle, and CTA button',
     templates: {
       block: `<div class="hero-section">
     <h1 class="hero-title">@{+title}@></h1>
@@ -43,12 +43,12 @@ const BLOCK_LAYOUTS: BlockLayout[] = [
 .hero-subtitle { font-size: 1.25rem; max-width: 600px; margin-bottom: 2rem; }
 .hero-cta { display: flex; gap: 1rem; }`,
     },
-    usage: "Use for landing pages, product showcases, or feature introductions.",
+    usage: 'Use for landing pages, product showcases, or feature introductions.',
   },
   {
-    name: "Image Gallery",
-    type: "gallery",
-    description: "Responsive grid of images with lightbox support",
+    name: 'Image Gallery',
+    type: 'gallery',
+    description: 'Responsive grid of images with lightbox support',
     templates: {
       block: `<div class="gallery-grid">
     <@ foreach @{ :filelist } as $image @>
@@ -68,12 +68,12 @@ const BLOCK_LAYOUTS: BlockLayout[] = [
     border-radius: 8px;
 }`,
     },
-    usage: "Combine with filelist block to upload images.",
+    usage: 'Combine with filelist block to upload images.',
   },
   {
-    name: "FAQ Accordion",
-    type: "faq",
-    description: "Expandable question/answer pairs",
+    name: 'FAQ Accordion',
+    type: 'faq',
+    description: 'Expandable question/answer pairs',
     templates: {
       block: `<div class="faq-container">
     <@ foreach @{ items } as $item @>
@@ -96,12 +96,12 @@ const BLOCK_LAYOUTS: BlockLayout[] = [
 .faq-item summary::-webkit-details-marker { display: none; }
 .faq-answer { margin-top: 1rem; color: #666; }`,
     },
-    usage: "Create FAQ pages or help sections.",
+    usage: 'Create FAQ pages or help sections.',
   },
   {
-    name: "Team Grid",
-    type: "team",
-    description: "Grid of team member cards with photo and bio",
+    name: 'Team Grid',
+    type: 'team',
+    description: 'Grid of team member cards with photo and bio',
     templates: {
       block: `<div class="team-grid">
     <@ foreach @{ members } as $member @>
@@ -133,12 +133,12 @@ const BLOCK_LAYOUTS: BlockLayout[] = [
 }
 .team-role { color: #666; margin-bottom: 1rem; }`,
     },
-    usage: "About pages or company presentations.",
+    usage: 'About pages or company presentations.',
   },
   {
-    name: "Pricing Table",
-    type: "pricing",
-    description: "Comparison table for pricing tiers",
+    name: 'Pricing Table',
+    type: 'pricing',
+    description: 'Comparison table for pricing tiers',
     templates: {
       block: `<div class="pricing-grid">
     <@ foreach @{ plans } as $plan @>
@@ -170,12 +170,12 @@ const BLOCK_LAYOUTS: BlockLayout[] = [
 .features { list-style: none; padding: 0; margin: 1.5rem 0; }
 .features li { padding: 0.5rem 0; border-bottom: 1px solid var(--color-border); }`,
     },
-    usage: "SaaS, subscription services, or product pricing pages.",
+    usage: 'SaaS, subscription services, or product pricing pages.',
   },
   {
-    name: "Testimonials Slider",
-    type: "testimonials",
-    description: "Customer testimonials with quotes and attribution",
+    name: 'Testimonials Slider',
+    type: 'testimonials',
+    description: 'Customer testimonials with quotes and attribution',
     templates: {
       block: `<div class="testimonials">
     <@ foreach @{ testimonials } as $t @>
@@ -213,12 +213,12 @@ const BLOCK_LAYOUTS: BlockLayout[] = [
 .testimonial cite { display: flex; flex-direction: column; }
 .testimonial cite span { font-size: 0.875rem; color: #666; }`,
     },
-    usage: "Social proof sections on landing pages.",
+    usage: 'Social proof sections on landing pages.',
   },
   {
-    name: "Call to Action Banner",
-    type: "cta",
-    description: "Full-width CTA with background and button",
+    name: 'Call to Action Banner',
+    type: 'cta',
+    description: 'Full-width CTA with background and button',
     templates: {
       block: `<section class="cta-banner">
     <div class="cta-content">
@@ -246,12 +246,12 @@ const BLOCK_LAYOUTS: BlockLayout[] = [
     margin-top: 1.5rem;
 }`,
     },
-    usage: "Newsletter signups, product launches, or conversion sections.",
+    usage: 'Newsletter signups, product launches, or conversion sections.',
   },
   {
-    name: "Feature Grid",
-    type: "hero",
-    description: "Grid of features with icons and descriptions",
+    name: 'Feature Grid',
+    type: 'hero',
+    description: 'Grid of features with icons and descriptions',
     templates: {
       block: `<div class="features-grid">
     <@ foreach @{ features } as $feature @>
@@ -272,7 +272,7 @@ const BLOCK_LAYOUTS: BlockLayout[] = [
 .feature-icon { font-size: 3rem; margin-bottom: 1rem; }
 .feature h3 { margin-bottom: 0.5rem; }`,
     },
-    usage: "Product feature overviews or service descriptions.",
+    usage: 'Product feature overviews or service descriptions.',
   },
 ];
 
@@ -284,8 +284,8 @@ export function getBlockLayouts(input: BlockLayoutsInput): string {
 
   let filtered = BLOCK_LAYOUTS;
 
-  if (type !== "all") {
-    filtered = filtered.filter((l) => l.type === type);
+  if (type !== 'all') {
+    filtered = filtered.filter(l => l.type === type);
   }
 
   if (filtered.length === 0) {
@@ -294,7 +294,7 @@ export function getBlockLayouts(input: BlockLayoutsInput): string {
 
   const lines: string[] = [
     `## Block Layout Templates (${filtered.length} found)\n`,
-    "Types: hero, gallery, faq, team, pricing, testimonials, cta\n",
+    'Types: hero, gallery, faq, team, pricing, testimonials, cta\n',
   ];
 
   for (const layout of filtered) {
@@ -303,32 +303,34 @@ export function getBlockLayouts(input: BlockLayoutsInput): string {
     lines.push(`\n**Type:** \`${layout.type}\``);
     lines.push(`\n**Usage:** ${layout.usage}\n`);
 
-    lines.push("**Template:**\n```html");
+    lines.push('**Template:**\n```html');
     lines.push(layout.templates.block);
-    lines.push("```");
+    lines.push('```');
 
     if (layout.templates.css) {
-      lines.push("\n**CSS:**\n```css");
+      lines.push('\n**CSS:**\n```css');
       lines.push(layout.templates.css);
-      lines.push("```");
+      lines.push('```');
     }
 
     // Show block fields
     const blockFields = layout.templates.block.match(/@\{\+(\w+)\}/g) || [];
     if (blockFields.length > 0) {
-      const fields = [...new Set(blockFields.map((f: string) => f.replace(/@\{\+|\}/g, "")))];
-      lines.push(`\n**Block Fields:** ${fields.map((f: string) => `\`+${f}\``).join(", ")}`);
+      const fields = [...new Set(blockFields.map((f: string) => f.replace(/@\{\+|\}/g, '')))];
+      lines.push(`\n**Block Fields:** ${fields.map((f: string) => `\`+${f}\``).join(', ')}`);
     }
   }
 
-  lines.push("\n---\n\n_Combine these layouts with the block editor's section and stretch features for best results._");
+  lines.push(
+    "\n---\n\n_Combine these layouts with the block editor's section and stretch features for best results._"
+  );
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
  * Get available layout types
  */
 export function getLayoutTypes(): string[] {
-  return [...new Set(BLOCK_LAYOUTS.map((l) => l.type))];
+  return [...new Set(BLOCK_LAYOUTS.map(l => l.type))];
 }

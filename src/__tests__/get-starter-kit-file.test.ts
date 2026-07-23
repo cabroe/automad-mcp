@@ -22,7 +22,10 @@ describe('getStarterKitFile', () => {
     });
 
     it('accepts both path and file parameters', () => {
-      const result = getStarterKitFileInputSchema.safeParse({ path: 'theme.json', file: 'README.md' });
+      const result = getStarterKitFileInputSchema.safeParse({
+        path: 'theme.json',
+        file: 'README.md',
+      });
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data.path).toBe('theme.json');
@@ -30,7 +33,10 @@ describe('getStarterKitFile', () => {
     });
 
     it('prefers path over file when both provided', () => {
-      const result = getStarterKitFileInputSchema.safeParse({ path: 'theme.json', file: 'README.md' });
+      const result = getStarterKitFileInputSchema.safeParse({
+        path: 'theme.json',
+        file: 'README.md',
+      });
       expect(result.success).toBe(true);
       if (result.success) {
         expect(result.data.path).toBe('theme.json');
@@ -67,7 +73,7 @@ describe('getStarterKitFile', () => {
   describe('getStarterKitFile function', () => {
     it('fetches file from GitHub successfully', async () => {
       const { getStarterKitFile } = await import('../tools/get-starter-kit-file.js');
-      
+
       mockFetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
@@ -77,7 +83,7 @@ describe('getStarterKitFile', () => {
       });
 
       const result = await getStarterKitFile({ path: 'README.md' });
-      
+
       expect(result).toContain('**File**: `README.md`');
       expect(result).toContain('**Source**:');
       expect(result).toContain('```markdown');
@@ -86,7 +92,7 @@ describe('getStarterKitFile', () => {
 
     it('returns error message for 404', async () => {
       const { getStarterKitFile } = await import('../tools/get-starter-kit-file.js');
-      
+
       mockFetch.mockResolvedValueOnce({
         ok: false,
         status: 404,
@@ -96,14 +102,14 @@ describe('getStarterKitFile', () => {
       });
 
       const result = await getStarterKitFile({ path: 'nonexistent.md' });
-      
+
       expect(result).toContain('File not found');
       expect(result).toContain('nonexistent.md');
     });
 
     it('handles PHP files with correct syntax highlighting', async () => {
       const { getStarterKitFile } = await import('../tools/get-starter-kit-file.js');
-      
+
       mockFetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
@@ -113,13 +119,13 @@ describe('getStarterKitFile', () => {
       });
 
       const result = await getStarterKitFile({ path: 'default.php' });
-      
+
       expect(result).toContain('```php');
     });
 
     it('handles JSON files with correct syntax highlighting', async () => {
       const { getStarterKitFile } = await import('../tools/get-starter-kit-file.js');
-      
+
       mockFetch.mockResolvedValueOnce({
         ok: true,
         status: 200,
@@ -129,15 +135,15 @@ describe('getStarterKitFile', () => {
       });
 
       const result = await getStarterKitFile({ path: 'theme.json' });
-      
+
       expect(result).toContain('```json');
     });
 
     it('handles binary files gracefully', async () => {
       const { getStarterKitFile } = await import('../tools/get-starter-kit-file.js');
-      
+
       const result = await getStarterKitFile({ path: 'image.png' });
-      
+
       expect(result).toContain('not supported');
       expect(result).toContain('png');
     });

@@ -3,8 +3,11 @@
  * Provides stats and control for all cached data.
  */
 
-import { cache as scraperCache, CACHE_TTL_MS as SCRAPER_TTL } from "./scraper.js";
-import { cache as starterKitCache, CACHE_TTL_MS as STARTER_KIT_TTL } from "../tools/get-starter-kit-file.js";
+import { cache as scraperCache, CACHE_TTL_MS as SCRAPER_TTL } from './scraper.js';
+import {
+  cache as starterKitCache,
+  CACHE_TTL_MS as STARTER_KIT_TTL,
+} from '../tools/get-starter-kit-file.js';
 
 export interface CacheStats {
   scraper: {
@@ -33,8 +36,8 @@ export function clearAllCaches(): void {
   starterKitCache.clear();
 }
 
-export function clearCache(cacheName: "scraper" | "starterKit"): void {
-  if (cacheName === "scraper") {
+export function clearCache(cacheName: 'scraper' | 'starterKit'): void {
+  if (cacheName === 'scraper') {
     scraperCache.clear();
   } else {
     starterKitCache.clear();

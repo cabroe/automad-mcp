@@ -1,111 +1,125 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { z } from "zod";
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { z } from 'zod';
 
-import { SECTIONS } from "./utils/pages.js";
-import { listPages } from "./tools/list-pages.js";
-import { searchDocs } from "./tools/search.js";
-import { getPage } from "./tools/get-page.js";
-import { listStarterKitFiles } from "./tools/list-starter-kit-files.js";
-import { getStarterKitFile } from "./tools/get-starter-kit-file.js";
-import { getThemeDoc } from "./tools/get-theme-doc.js";
-import { getSnippets } from "./tools/snippets.js";
-import { getBlockLayouts } from "./tools/block-layouts.js";
-import { validateTheme } from "./tools/theme-validator.js";
-import { analyzeFields } from "./tools/field-analyzer.js";
-import { compareThemes } from "./tools/theme-compare.js";
-import { generateTheme } from "./tools/theme-generator.js";
-import { generateI18n } from "./tools/i18n-generator.js";
-import { livePreview } from "./tools/live-preview.js";
-import { getDockerHelp } from "./tools/docker-help.js";
-import { getBlockTemplates, getBlockTemplate } from "./tools/block-templates.js";
-import { getContextPatterns } from "./tools/context-patterns.js";
-import { getTemplateSyntax } from "./tools/template-syntax.js";
-import { getCacheStats, clearAllCaches, clearCache } from "./utils/cache.js";
-import { loadConfig, parseArgs, logVerbose } from "./utils/config.js";
+import { SECTIONS } from './utils/pages.js';
+import { listPages } from './tools/list-pages.js';
+import { searchDocs } from './tools/search.js';
+import { getPage } from './tools/get-page.js';
+import { listStarterKitFiles } from './tools/list-starter-kit-files.js';
+import { getStarterKitFile } from './tools/get-starter-kit-file.js';
+import { getThemeDoc } from './tools/get-theme-doc.js';
+import { getSnippets } from './tools/snippets.js';
+import { getBlockLayouts } from './tools/block-layouts.js';
+import { validateTheme } from './tools/theme-validator.js';
+import { analyzeFields } from './tools/field-analyzer.js';
+import { compareThemes } from './tools/theme-compare.js';
+import { generateTheme } from './tools/theme-generator.js';
+import { generateI18n } from './tools/i18n-generator.js';
+import { livePreview } from './tools/live-preview.js';
+import { getDockerHelp } from './tools/docker-help.js';
+import { getBlockTemplates, getBlockTemplate } from './tools/block-templates.js';
+import { getContextPatterns } from './tools/context-patterns.js';
+import { getTemplateSyntax } from './tools/template-syntax.js';
+import { getCacheStats, clearAllCaches, clearCache } from './utils/cache.js';
+import { loadConfig, parseArgs, logVerbose } from './utils/config.js';
 
 // ─── Parse CLI Args ──────────────────────────────────────────────────────────
 const { config: cliConfig } = parseArgs(process.argv.slice(2));
 loadConfig().then(() => {
-  logVerbose("Config loaded");
-  logVerbose(`Verbose mode: ${cliConfig.verbose ? "on" : "off"}`);
+  logVerbose('Config loaded');
+  logVerbose(`Verbose mode: ${cliConfig.verbose ? 'on' : 'off'}`);
 });
 
 // ─── MCP Server ─────────────────────────────────────────────────────────────
 const server = new McpServer({
-  name: "automad-docs",
-  version: "1.0.0",
+  name: 'automad-docs',
+  version: '1.0.0',
 });
 
 // ─── Documentation Tools ─────────────────────────────────────────────────────
 
 server.tool(
-  "list_pages",
-  "List all available Automad documentation pages.",
+  'list_pages',
+  'List all available Automad documentation pages.',
   {
-    section: z.enum(SECTIONS).optional().describe(`Filter by section: ${SECTIONS.join(", ")}`),
+    section: z
+      .enum(SECTIONS)
+      .optional()
+      .describe(`Filter by section: ${SECTIONS.join(', ')}`),
   },
-  async (args) => {
+  async args => {
     const result = listPages({ section: args.section });
-    return { content: [{ type: "text", text: result }] };
+    return { content: [{ type: 'text', text: result }] };
   }
 );
 
 server.tool(
-  "search_docs",
-  "Search the Automad documentation index.",
+  'search_docs',
+  'Search the Automad documentation index.',
   {
-    query: z.string().min(1).describe("Search term"),
-    page: z.number().int().min(1).default(1).optional().describe("Page number"),
-    perPage: z.number().int().min(1).max(50).default(10).optional().describe("Results per page"),
+    query: z.string().min(1).describe('Search term'),
+    page: z.number().int().min(1).default(1).optional().describe('Page number'),
+    perPage: z.number().int().min(1).max(50).default(10).optional().describe('Results per page'),
   },
-  async (args) => {
+  async args => {
     const result = searchDocs({ query: args.query, page: args.page, perPage: args.perPage });
-    return { content: [{ type: "text", text: result }] };
+    return { content: [{ type: 'text', text: result }] };
   }
 );
 
 server.tool(
-  "get_page",
-  "Fetch a documentation page as Markdown.",
+  'get_page',
+  'Fetch a documentation page as Markdown.',
   {
-    url: z.string().min(1).describe("Page URL (full or relative)"),
+    url: z.string().min(1).describe('Page URL (full or relative)'),
   },
-  async (args) => {
+  async args => {
     try {
       const result = await getPage({ url: args.url });
-      return { content: [{ type: "text", text: result }] };
+      return { content: [{ type: 'text', text: result }] };
     } catch (err) {
-      return { content: [{ type: "text", text: formatError("page", args.url, (err as Error).message) }], isError: true };
+      return {
+        content: [{ type: 'text', text: formatError('page', args.url, (err as Error).message) }],
+        isError: true,
+      };
     }
   }
 );
 
 server.tool(
-  "list_starter_kit_files",
-  "List files in the Automad Theme Starter Kit.",
+  'list_starter_kit_files',
+  'List files in the Automad Theme Starter Kit.',
   {
-    directory: z.string().optional().describe("Filter by directory"),
+    directory: z.string().optional().describe('Filter by directory'),
   },
-  async (args) => {
+  async args => {
     const result = listStarterKitFiles({ directory: args.directory });
-    return { content: [{ type: "text", text: result }] };
+    return { content: [{ type: 'text', text: result }] };
   }
 );
 
 server.tool(
-  "get_starter_kit_file",
-  "Read a file from the Automad Theme Starter Kit.",
+  'get_starter_kit_file',
+  'Read a file from the Automad Theme Starter Kit.',
   {
-    path: z.string().min(1).optional().describe("File path"),
-    file: z.string().min(1).optional().describe("Alias for path"),
+    path: z.string().min(1).optional().describe('File path'),
+    file: z.string().min(1).optional().describe('Alias for path'),
   },
-  async (args) => {
+  async args => {
     try {
-      const result = await getStarterKitFile({ path: args.path ?? args.file ?? "" });
-      return { content: [{ type: "text", text: result }] };
+      const result = await getStarterKitFile({ path: args.path ?? args.file ?? '' });
+      return { content: [{ type: 'text', text: result }] };
     } catch (err) {
-      return { content: [{ type: "text", text: formatError("file", args.path ?? args.file ?? "", (err as Error).message) }], isError: true };
+      return {
+        content: [
+          {
+            type: 'text',
+            text: formatError('file', args.path ?? args.file ?? '', (err as Error).message),
+          },
+        ],
+        isError: true,
+      };
     }
   }
 );
@@ -113,292 +127,373 @@ server.tool(
 // ─── Local Theme Tools ───────────────────────────────────────────────────────
 
 server.tool(
-  "get_theme_doc",
-  "Read documentation from a local Automad theme.",
+  'get_theme_doc',
+  'Read documentation from a local Automad theme.',
   {
     path: z.string().optional().describe("Path within theme (e.g., 'components/page.php')"),
-    themePath: z.string().optional().describe("Absolute path to theme directory"),
+    themePath: z.string().optional().describe('Absolute path to theme directory'),
   },
-  async (args) => {
+  async args => {
     try {
       const result = await getThemeDoc({ path: args.path, themePath: args.themePath });
-      return { content: [{ type: "text", text: result }] };
+      return { content: [{ type: 'text', text: result }] };
     } catch (err) {
-      return { content: [{ type: "text", text: `Error: ${(err as Error).message}` }], isError: true };
+      return {
+        content: [{ type: 'text', text: `Error: ${(err as Error).message}` }],
+        isError: true,
+      };
     }
   }
 );
 
 server.tool(
-  "get_snippets",
-  "Get reusable Automad template snippets. Categories: statements, variables, blocks, layout, i18n, navigation, helper",
+  'get_snippets',
+  'Get reusable Automad template snippets. Categories: statements, variables, blocks, layout, i18n, navigation, helper',
   {
-    category: z.enum(["all", "statements", "variables", "blocks", "layout", "i18n", "navigation", "helper"]).optional().default("all").describe("Filter by category"),
-    search: z.string().optional().describe("Search snippets"),
+    category: z
+      .enum(['all', 'statements', 'variables', 'blocks', 'layout', 'i18n', 'navigation', 'helper'])
+      .optional()
+      .default('all')
+      .describe('Filter by category'),
+    search: z.string().optional().describe('Search snippets'),
   },
-  async (args) => {
+  async args => {
     const result = getSnippets({ category: args.category as any, search: args.search });
-    return { content: [{ type: "text", text: result }] };
+    return { content: [{ type: 'text', text: result }] };
   }
 );
 
 server.tool(
-  "get_template_syntax",
-  "Get comprehensive Automad template syntax reference. Explains the difference between statements (<@ @>), variables (@{ }), and blocks (@{ + }). Includes debugging tips.",
+  'get_template_syntax',
+  'Get comprehensive Automad template syntax reference. Explains the difference between statements (<@ @>), variables (@{ }), and blocks (@{ + }). Includes debugging tips.',
   {
-    type: z.enum(["all", "statements", "variables", "blocks", "snippets", "debug"]).optional().default("all").describe("Filter by type"),
+    type: z
+      .enum(['all', 'statements', 'variables', 'blocks', 'snippets', 'debug'])
+      .optional()
+      .default('all')
+      .describe('Filter by type'),
   },
-  async (args) => {
+  async args => {
     const result = getTemplateSyntax({ type: args.type });
-    return { content: [{ type: "text", text: result }] };
+    return { content: [{ type: 'text', text: result }] };
   }
 );
 
 server.tool(
-  "get_docker_help",
-  "Get Docker testing guide for Automad themes. Topics: setup (directory structure, prerequisites), commands (start/stop, theme copy, cache), debug (logs, credentials, troubleshooting), compose (docker-compose.yml example).",
+  'get_docker_help',
+  'Get Docker testing guide for Automad themes. Topics: setup (directory structure, prerequisites), commands (start/stop, theme copy, cache), debug (logs, credentials, troubleshooting), compose (docker-compose.yml example).',
   {
-    topic: z.enum(["all", "setup", "commands", "debug", "compose"]).optional().default("all").describe("Docker help topic"),
+    topic: z
+      .enum(['all', 'setup', 'commands', 'debug', 'compose'])
+      .optional()
+      .default('all')
+      .describe('Docker help topic'),
   },
-  async (args) => {
+  async args => {
     const result = getDockerHelp({ topic: args.topic });
-    return { content: [{ type: "text", text: result }] };
+    return { content: [{ type: 'text', text: result }] };
   }
 );
 
 server.tool(
-  "get_block_templates",
-  "List available Automad block templates from the Starter Kit. Block templates customize how blocks (like pagelist) render in the editor.",
+  'get_block_templates',
+  'List available Automad block templates from the Starter Kit. Block templates customize how blocks (like pagelist) render in the editor.',
   {
-    type: z.enum(["all", "pagelist", "sections"]).optional().default("all").describe("Block template type"),
+    type: z
+      .enum(['all', 'pagelist', 'sections'])
+      .optional()
+      .default('all')
+      .describe('Block template type'),
   },
-  async (args) => {
+  async args => {
     try {
       const result = await getBlockTemplates({ type: args.type });
-      return { content: [{ type: "text", text: result }] };
+      return { content: [{ type: 'text', text: result }] };
     } catch (err) {
-      return { content: [{ type: "text", text: `Error: ${(err as Error).message}` }], isError: true };
+      return {
+        content: [{ type: 'text', text: `Error: ${(err as Error).message}` }],
+        isError: true,
+      };
     }
   }
 );
 
 server.tool(
-  "get_block_template",
-  "Fetch a specific block template from the Automad Starter Kit. Returns the raw PHP code for customization.",
+  'get_block_template',
+  'Fetch a specific block template from the Automad Starter Kit. Returns the raw PHP code for customization.',
   {
     type: z.string().min(1).describe("Block type (e.g., 'pagelist')"),
     variant: z.string().optional().describe("Variant name (e.g., 'grid', 'blog')"),
   },
-  async (args) => {
+  async args => {
     try {
       const result = await getBlockTemplate({ type: args.type, variant: args.variant });
-      return { content: [{ type: "text", text: result }] };
+      return { content: [{ type: 'text', text: result }] };
     } catch (err) {
-      return { content: [{ type: "text", text: `Error: ${(err as Error).message}` }], isError: true };
+      return {
+        content: [{ type: 'text', text: `Error: ${(err as Error).message}` }],
+        isError: true,
+      };
     }
   }
 );
 
 server.tool(
-  "get_context_patterns",
-  "Get Automad context manipulation patterns: set (mutate context), with (change context), foreach (loop variables), recursive (self-calling snippets for navigation).",
+  'get_context_patterns',
+  'Get Automad context manipulation patterns: set (mutate context), with (change context), foreach (loop variables), recursive (self-calling snippets for navigation).',
   {
-    type: z.enum(["all", "set", "with", "foreach", "recursive"]).optional().default("all").describe("Context pattern type"),
+    type: z
+      .enum(['all', 'set', 'with', 'foreach', 'recursive'])
+      .optional()
+      .default('all')
+      .describe('Context pattern type'),
   },
-  async (args) => {
+  async args => {
     const result = getContextPatterns({ type: args.type });
-    return { content: [{ type: "text", text: result }] };
+    return { content: [{ type: 'text', text: result }] };
   }
 );
 
 server.tool(
-  "get_block_layouts",
-  "Get block layout templates for the editor.",
+  'get_block_layouts',
+  'Get block layout templates for the editor.',
   {
-    type: z.enum(["all", "hero", "gallery", "faq", "team", "pricing", "testimonials", "cta"]).optional().default("all").describe("Filter by type"),
+    type: z
+      .enum(['all', 'hero', 'gallery', 'faq', 'team', 'pricing', 'testimonials', 'cta'])
+      .optional()
+      .default('all')
+      .describe('Filter by type'),
   },
-  async (args) => {
+  async args => {
     const result = getBlockLayouts({ type: args.type });
-    return { content: [{ type: "text", text: result }] };
+    return { content: [{ type: 'text', text: result }] };
   }
 );
 
 server.tool(
-  "validate_theme",
-  "Validate a theme against Automad best practices.",
+  'validate_theme',
+  'Validate a theme against Automad best practices.',
   {
-    themePath: z.string().optional().describe("Absolute path to theme"),
+    themePath: z.string().optional().describe('Absolute path to theme'),
   },
-  async (args) => {
+  async args => {
     try {
       const result = await validateTheme({ themePath: args.themePath });
-      return { content: [{ type: "text", text: result }] };
+      return { content: [{ type: 'text', text: result }] };
     } catch (err) {
-      return { content: [{ type: "text", text: `Error: ${(err as Error).message}` }], isError: true };
+      return {
+        content: [{ type: 'text', text: `Error: ${(err as Error).message}` }],
+        isError: true,
+      };
     }
   }
 );
 
 server.tool(
-  "analyze_fields",
-  "Analyze which fields are used in a theme.",
+  'analyze_fields',
+  'Analyze which fields are used in a theme.',
   {
-    themePath: z.string().optional().describe("Theme path"),
-    template: z.string().optional().describe("Specific template to analyze"),
+    themePath: z.string().optional().describe('Theme path'),
+    template: z.string().optional().describe('Specific template to analyze'),
   },
-  async (args) => {
+  async args => {
     try {
       const result = await analyzeFields({ themePath: args.themePath, template: args.template });
-      return { content: [{ type: "text", text: result }] };
+      return { content: [{ type: 'text', text: result }] };
     } catch (err) {
-      return { content: [{ type: "text", text: `Error: ${(err as Error).message}` }], isError: true };
+      return {
+        content: [{ type: 'text', text: `Error: ${(err as Error).message}` }],
+        isError: true,
+      };
     }
   }
 );
 
 server.tool(
-  "compare_themes",
-  "Compare a theme against the Starter Kit or another theme.",
+  'compare_themes',
+  'Compare a theme against the Starter Kit or another theme.',
   {
-    baseTheme: z.string().optional().describe("Base theme path"),
-    compareTheme: z.string().optional().describe("Theme to compare"),
-    starterKitAsBase: z.boolean().optional().default(true).describe("Use Starter Kit as base"),
+    baseTheme: z.string().optional().describe('Base theme path'),
+    compareTheme: z.string().optional().describe('Theme to compare'),
+    starterKitAsBase: z.boolean().optional().default(true).describe('Use Starter Kit as base'),
   },
-  async (args) => {
+  async args => {
     try {
-      const result = await compareThemes({ baseTheme: args.baseTheme, compareTheme: args.compareTheme, starterKitAsBase: args.starterKitAsBase });
-      return { content: [{ type: "text", text: result }] };
+      const result = await compareThemes({
+        baseTheme: args.baseTheme,
+        compareTheme: args.compareTheme,
+        starterKitAsBase: args.starterKitAsBase,
+      });
+      return { content: [{ type: 'text', text: result }] };
     } catch (err) {
-      return { content: [{ type: "text", text: `Error: ${(err as Error).message}` }], isError: true };
+      return {
+        content: [{ type: 'text', text: `Error: ${(err as Error).message}` }],
+        isError: true,
+      };
     }
   }
 );
 
 server.tool(
-  "generate_theme",
-  "Generate a new Automad theme from template.",
+  'generate_theme',
+  'Generate a new Automad theme from template.',
   {
-    name: z.string().optional().describe("Theme name"),
-    outputPath: z.string().optional().describe("Output directory"),
-    template: z.enum(["minimal", "starter", "blog", "portfolio"]).optional().default("starter").describe("Template type"),
-    author: z.string().optional().default("Developer").describe("Author name"),
+    name: z.string().optional().describe('Theme name'),
+    outputPath: z.string().optional().describe('Output directory'),
+    template: z
+      .enum(['minimal', 'starter', 'blog', 'portfolio'])
+      .optional()
+      .default('starter')
+      .describe('Template type'),
+    author: z.string().optional().default('Developer').describe('Author name'),
   },
-  async (args) => {
+  async args => {
     try {
-      const result = await generateTheme({ name: args.name, outputPath: args.outputPath, template: args.template, author: args.author });
-      return { content: [{ type: "text", text: result }] };
+      const result = await generateTheme({
+        name: args.name,
+        outputPath: args.outputPath,
+        template: args.template,
+        author: args.author,
+      });
+      return { content: [{ type: 'text', text: result }] };
     } catch (err) {
-      return { content: [{ type: "text", text: `Error: ${(err as Error).message}` }], isError: true };
+      return {
+        content: [{ type: 'text', text: `Error: ${(err as Error).message}` }],
+        isError: true,
+      };
     }
   }
 );
 
 server.tool(
-  "generate_i18n",
+  'generate_i18n',
   "Generate translations, analyze templates, or explain i18n patterns. Use pattern='all' (default) to see pattern comparison, or specific pattern for detailed explanation.",
   {
-    templatePath: z.string().optional().describe("Template file to scan"),
-    themePath: z.string().optional().describe("Theme to scan"),
-    generate: z.boolean().optional().default(false).describe("Generate i18n.php skeleton"),
-    languages: z.string().optional().default("de,en").describe("Comma-separated languages"),
-    pattern: z.enum(["all", "per-tree", "per-field", "mixed"]).optional().default("all").describe("i18n pattern to explain"),
+    templatePath: z.string().optional().describe('Template file to scan'),
+    themePath: z.string().optional().describe('Theme to scan'),
+    generate: z.boolean().optional().default(false).describe('Generate i18n.php skeleton'),
+    languages: z.string().optional().default('de,en').describe('Comma-separated languages'),
+    pattern: z
+      .enum(['all', 'per-tree', 'per-field', 'mixed'])
+      .optional()
+      .default('all')
+      .describe('i18n pattern to explain'),
   },
-  async (args) => {
+  async args => {
     try {
-      const result = await generateI18n({ templatePath: args.templatePath, themePath: args.themePath, generate: args.generate, languages: args.languages, pattern: args.pattern });
-      return { content: [{ type: "text", text: result }] };
+      const result = await generateI18n({
+        templatePath: args.templatePath,
+        themePath: args.themePath,
+        generate: args.generate,
+        languages: args.languages,
+        pattern: args.pattern,
+      });
+      return { content: [{ type: 'text', text: result }] };
     } catch (err) {
-      return { content: [{ type: "text", text: `Error: ${(err as Error).message}` }], isError: true };
+      return {
+        content: [{ type: 'text', text: `Error: ${(err as Error).message}` }],
+        isError: true,
+      };
     }
   }
 );
 
 server.tool(
-  "live_preview",
-  "Manage local development server for theme preview.",
+  'live_preview',
+  'Manage local development server for theme preview.',
   {
-    action: z.enum(["status", "start", "stop", "open"]).optional().default("status").describe("Action"),
-    port: z.number().int().min(1024).max(65535).optional().default(8000).describe("Server port"),
-    themePath: z.string().optional().describe("Theme or Automad path"),
+    action: z
+      .enum(['status', 'start', 'stop', 'open'])
+      .optional()
+      .default('status')
+      .describe('Action'),
+    port: z.number().int().min(1024).max(65535).optional().default(8000).describe('Server port'),
+    themePath: z.string().optional().describe('Theme or Automad path'),
   },
-  async (args) => {
+  async args => {
     try {
-      const result = await livePreview({ action: args.action, port: args.port, themePath: args.themePath });
-      return { content: [{ type: "text", text: result }] };
+      const result = await livePreview({
+        action: args.action,
+        port: args.port,
+        themePath: args.themePath,
+      });
+      return { content: [{ type: 'text', text: result }] };
     } catch (err) {
-      return { content: [{ type: "text", text: `Error: ${(err as Error).message}` }], isError: true };
+      return {
+        content: [{ type: 'text', text: `Error: ${(err as Error).message}` }],
+        isError: true,
+      };
     }
   }
 );
 
 // ─── Version & Info Tools ───────────────────────────────────────────────────
 
-server.tool(
-  "get_automad_version",
-  "Get information about Automad Version 2.",
-  {},
-  async () => {
-    const lines = [
-      "## Automad Version 2",
-      "",
-      "**Key Changes:**",
-      "- New Template Engine with better performance",
-      "- Dashboard Redesign with block editor",
-      "- GitHub-based package system",
-      "- TypeScript support in themes",
-      "",
-      "**Migration from v1:**",
-      "- Themes need updates for new syntax",
-      "- Blocks replace old content areas",
-      "",
-      "**Resources:**",
-      "- [Version 2 Overview](https://automad.org/version-2)",
-      "- [Starter Kit](https://github.com/automadcms/automad-theme-starter-kit)",
-    ];
-    return { content: [{ type: "text", text: lines.join("\n") }] };
-  }
-);
+server.tool('get_automad_version', 'Get information about Automad Version 2.', {}, async () => {
+  const lines = [
+    '## Automad Version 2',
+    '',
+    '**Key Changes:**',
+    '- New Template Engine with better performance',
+    '- Dashboard Redesign with block editor',
+    '- GitHub-based package system',
+    '- TypeScript support in themes',
+    '',
+    '**Migration from v1:**',
+    '- Themes need updates for new syntax',
+    '- Blocks replace old content areas',
+    '',
+    '**Resources:**',
+    '- [Version 2 Overview](https://automad.org/version-2)',
+    '- [Starter Kit](https://github.com/automadcms/automad-theme-starter-kit)',
+  ];
+  return { content: [{ type: 'text', text: lines.join('\n') }] };
+});
 
 // ─── Cache Tools ─────────────────────────────────────────────────────────────
 
-server.tool("get_cache_stats", "Get cache statistics.", {}, async () => {
+server.tool('get_cache_stats', 'Get cache statistics.', {}, async () => {
   const stats = getCacheStats();
   const lines = [
-    "## Cache Statistics",
-    "",
+    '## Cache Statistics',
+    '',
     `**Scraper:** ${stats.scraper.entries} entries, TTL ${formatMs(stats.scraper.ttlMs)}`,
     `**Starter Kit:** ${stats.starterKit.entries} entries, TTL ${formatMs(stats.starterKit.ttlMs)}`,
   ];
-  return { content: [{ type: "text", text: lines.join("\n") }] };
+  return { content: [{ type: 'text', text: lines.join('\n') }] };
 });
 
 server.tool(
-  "clear_cache",
-  "Clear the internal cache.",
+  'clear_cache',
+  'Clear the internal cache.',
   {
-    target: z.enum(["all", "scraper", "starterKit"]).optional().default("all").describe("Which cache to clear"),
+    target: z
+      .enum(['all', 'scraper', 'starterKit'])
+      .optional()
+      .default('all')
+      .describe('Which cache to clear'),
   },
-  async (args) => {
-    const target = args.target ?? "all";
-    if (target === "all") clearAllCaches();
+  async args => {
+    const target = args.target ?? 'all';
+    if (target === 'all') clearAllCaches();
     else clearCache(target);
-    return { content: [{ type: "text", text: `✅ Cache cleared: ${target}` }] };
+    return { content: [{ type: 'text', text: `✅ Cache cleared: ${target}` }] };
   }
 );
 
 // ─── Health Check ────────────────────────────────────────────────────────────
 
-server.tool("health", "Health check endpoint.", {}, async () => {
+server.tool('health', 'Health check endpoint.', {}, async () => {
   const mem = process.memoryUsage();
   const lines = [
-    "## Health Check",
-    "",
-    "**Status:** ✅ Healthy",
+    '## Health Check',
+    '',
+    '**Status:** ✅ Healthy',
     `**Uptime:** ${formatUptime(process.uptime())}`,
     `**Memory:** ${formatBytes(mem.heapUsed)} / ${formatBytes(mem.heapTotal)}`,
     `**Node.js:** ${process.version}`,
   ];
-  return { content: [{ type: "text", text: lines.join("\n") }] };
+  return { content: [{ type: 'text', text: lines.join('\n') }] };
 });
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -424,17 +519,19 @@ function formatUptime(seconds: number): string {
   if (h > 0) parts.push(`${h}h`);
   if (m > 0) parts.push(`${m}m`);
   if (s > 0 || parts.length === 0) parts.push(`${s}s`);
-  return parts.join(" ");
+  return parts.join(' ');
 }
 
 function formatError(type: string, identifier: string, message: string): string {
   const lines = [`❌ **Error**\n`];
-  if (message.includes("ECONNABORTED") || message.includes("timeout")) lines.push("**Timeout** — Request took too long.");
-  else if (message.includes("404")) lines.push(`**Not Found:** ${identifier}`);
-  else if (message.includes("429")) lines.push("**Rate Limited** — Wait and try again.");
-  else if (message.includes("ENOTFOUND") || message.includes("ECONNREFUSED")) lines.push("**Connection Error** — Check internet.");
+  if (message.includes('ECONNABORTED') || message.includes('timeout'))
+    lines.push('**Timeout** — Request took too long.');
+  else if (message.includes('404')) lines.push(`**Not Found:** ${identifier}`);
+  else if (message.includes('429')) lines.push('**Rate Limited** — Wait and try again.');
+  else if (message.includes('ENOTFOUND') || message.includes('ECONNREFUSED'))
+    lines.push('**Connection Error** — Check internet.');
   else lines.push(message);
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 // ─── Start ───────────────────────────────────────────────────────────────────
@@ -442,10 +539,10 @@ function formatError(type: string, identifier: string, message: string): string 
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error("Automad MCP server running on stdio");
+  console.error('Automad MCP server running on stdio');
 }
 
-main().catch((err) => {
-  console.error("Fatal error:", err);
+main().catch(err => {
+  console.error('Fatal error:', err);
   process.exit(1);
 });

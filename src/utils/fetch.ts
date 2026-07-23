@@ -18,12 +18,7 @@ interface FetchResult {
  * Retries on: network errors, 500-599 server errors, 429 rate limit.
  */
 export async function fetchWithRetry(options: FetchOptions): Promise<FetchResult> {
-  const {
-    url,
-    retries = 3,
-    delayMs = 1000,
-    timeoutMs = 15000,
-  } = options;
+  const { url, retries = 3, delayMs = 1000, timeoutMs = 15000 } = options;
 
   let lastError: Error | null = null;
 
@@ -35,8 +30,9 @@ export async function fetchWithRetry(options: FetchOptions): Promise<FetchResult
       const response = await fetch(url, {
         signal: controller.signal,
         headers: {
-          "User-Agent": "automad-mcp/1.0 (MCP documentation server; https://github.com/cabroe/automad-mcp)",
-          Accept: "text/html,text/plain",
+          'User-Agent':
+            'automad-mcp/1.0 (MCP documentation server; https://github.com/cabroe/automad-mcp)',
+          Accept: 'text/html,text/plain',
         },
       });
 
@@ -59,10 +55,7 @@ export async function fetchWithRetry(options: FetchOptions): Promise<FetchResult
       lastError = err instanceof Error ? err : new Error(String(err));
 
       // Abort/timeout - retry
-      if (
-        lastError.name === "AbortError" ||
-        lastError.message.includes("aborted")
-      ) {
+      if (lastError.name === 'AbortError' || lastError.message.includes('aborted')) {
         if (attempt < retries) {
           await sleep(delayMs * Math.pow(2, attempt));
           continue;
@@ -78,9 +71,9 @@ export async function fetchWithRetry(options: FetchOptions): Promise<FetchResult
     }
   }
 
-  throw lastError ?? new Error("Unknown fetch error");
+  throw lastError ?? new Error('Unknown fetch error');
 }
 
 function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

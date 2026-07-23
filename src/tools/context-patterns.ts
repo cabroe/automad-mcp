@@ -1,7 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const contextPatternsInputSchema = z.object({
-  type: z.enum(["all", "set", "with", "foreach", "recursive"]).optional().default("all").describe("Context pattern type"),
+  type: z
+    .enum(['all', 'set', 'with', 'foreach', 'recursive'])
+    .optional()
+    .default('all')
+    .describe('Context pattern type'),
 });
 
 export type ContextPatternsInput = z.infer<typeof contextPatternsInputSchema>;
@@ -10,16 +14,16 @@ export type ContextPatternsInput = z.infer<typeof contextPatternsInputSchema>;
  * Get Automad context manipulation patterns
  */
 export function getContextPatterns(input: ContextPatternsInput): string {
-  const type = input.type || "all";
+  const type = input.type || 'all';
 
   switch (type) {
-    case "set":
+    case 'set':
       return formatSet();
-    case "with":
+    case 'with':
       return formatWith();
-    case "foreach":
+    case 'foreach':
       return formatForeach();
-    case "recursive":
+    case 'recursive':
       return formatRecursive();
     default:
       return formatAll();
@@ -27,24 +31,19 @@ export function getContextPatterns(input: ContextPatternsInput): string {
 }
 
 function formatAll(): string {
-  return [
-    formatSet(),
-    "",
-    formatWith(),
-    "",
-    formatForeach(),
-    "",
-    formatRecursive(),
-  ].join("\n---\n\n");
+  return [formatSet(), '', formatWith(), '', formatForeach(), '', formatRecursive()].join(
+    '\n---\n\n'
+  );
 }
 
 function formatSet(): string {
-  const code = "<@ set { } @>";
+  const code = '<@ set { } @>';
   const codeBlock = "<@ set { :classArticle: 'card', :showFooter: true } @>";
-  const codeFilter = "<@ set { filter: '{\"checkboxShowInNavbar\":\"/[^0]+/\"}', sort: 'date desc' } @>";
+  const codeFilter =
+    '<@ set { filter: \'{"checkboxShowInNavbar":"/[^0]+/"}\', sort: \'date desc\' } @>';
   const codeClasses = "<@ set { :classes: 'cards masonry' } @>";
-  const codeStrip = "<@~ set { :count: 6 } ~@>";
-  
+  const codeStrip = '<@~ set { :count: 6 } ~@>';
+
   return `## Context setzen mit \`${code}\`
 
 \`set\` mutiert den aktuellen Context für alles Folgende.
@@ -84,10 +83,11 @@ Entfernt Umgebungs-Whitespace für sauberes HTML.`;
 }
 
 function formatWith(): string {
-  const code = "<@ with @>";
+  const code = '<@ with @>';
   const codePage = "<@ with '/kontakt' @>\n  <h2>@{ :title }</h2>\n<@ end @>";
-  const codeImage = "<@ with @{ imageLogo } @>\n  <img src=\"@{ imageLogo }\" alt=\"@{ :basename }\">\n<@ end @>";
-  
+  const codeImage =
+    '<@ with @{ imageLogo } @>\n  <img src="@{ imageLogo }" alt="@{ :basename }">\n<@ end @>';
+
   return `## Kontext wechseln mit \`${code}\`
 
 \`with\` wechselt den Context zu einer anderen Seite oder einem Objekt.
@@ -117,10 +117,12 @@ ${codeImage}
 }
 
 function formatForeach(): string {
-  const code = "<@ foreach in @>";
-  const codeLoop = "<@ foreach in pagelist @>\n  <article>\n    <h3>@{ :title }</h3>\n    <a href=\"@{ :url }\">Weiterlesen</a>\n  </article>\n<@ end @>";
-  const codeActive = "<@ foreach in pagelist @>\n  <li<@ if @{ :current } @> class=\"active\"<@ end @>>\n    <a href=\"@{ :url }\">@{ :title }</a>\n  </li>\n<@ end @>";
-  
+  const code = '<@ foreach in @>';
+  const codeLoop =
+    '<@ foreach in pagelist @>\n  <article>\n    <h3>@{ :title }</h3>\n    <a href="@{ :url }">Weiterlesen</a>\n  </article>\n<@ end @>';
+  const codeActive =
+    '<@ foreach in pagelist @>\n  <li<@ if @{ :current } @> class="active"<@ end @>>\n    <a href="@{ :url }">@{ :title }</a>\n  </li>\n<@ end @>';
+
   return `## Schleifen mit \`${code}\`
 
 \`foreach\` iteriert über Objekte (pagelist, filelist, nav, breadcrumb).
@@ -152,7 +154,7 @@ ${codeActive}
 }
 
 function formatRecursive(): string {
-  const snippet = "<@ snippet tree @>";
+  const snippet = '<@ snippet tree @>';
   const treeCode = `<@ snippet tree @>
   <ul>
     <@ foreach in pagelist @>
@@ -169,7 +171,7 @@ function formatRecursive(): string {
   <@ newPagelist { type: 'children' } @>
   <@ tree @>
 </nav>`;
-  
+
   return `## Rekursive Snippets (Navigation)
 
 Ein Snippet kann sich selbst aufrufen - für verschachtelte Menüs.
@@ -198,4 +200,4 @@ Untermenüs auf dem gesamten Pfad zur aktuellen Seite.`;
 }
 
 // Export for testing
-export const contextTypes = ["all", "set", "with", "foreach", "recursive"];
+export const contextTypes = ['all', 'set', 'with', 'foreach', 'recursive'];

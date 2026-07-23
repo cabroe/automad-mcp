@@ -1,6 +1,6 @@
-import { readFile, writeFile, mkdir } from "fs/promises";
-import { existsSync } from "fs";
-import { join } from "path";
+import { readFile, writeFile, mkdir } from 'fs/promises';
+import { existsSync } from 'fs';
+import { join } from 'path';
 
 export interface Config {
   verbose: boolean;
@@ -11,7 +11,7 @@ export interface Config {
 
 const DEFAULT_CONFIG: Config = {
   verbose: false,
-  cacheDir: join(process.env.HOME ?? ".", ".cache", "automad-mcp"),
+  cacheDir: join(process.env.HOME ?? '.', '.cache', 'automad-mcp'),
   cacheTtlMs: 60 * 60 * 1000, // 1 hour
 };
 
@@ -25,11 +25,11 @@ export async function loadConfig(): Promise<Config> {
     return cachedConfig;
   }
 
-  const configPath = join(process.env.HOME ?? ".", ".automad-mcp.json");
+  const configPath = join(process.env.HOME ?? '.', '.automad-mcp.json');
 
   if (existsSync(configPath)) {
     try {
-      const content = await readFile(configPath, "utf-8");
+      const content = await readFile(configPath, 'utf-8');
       const userConfig = JSON.parse(content);
       cachedConfig = { ...DEFAULT_CONFIG, ...userConfig };
     } catch (err) {
@@ -47,17 +47,17 @@ export async function loadConfig(): Promise<Config> {
  * Save configuration to ~/.automad-mcp.json
  */
 export async function saveConfig(config: Partial<Config>): Promise<void> {
-  const configPath = join(process.env.HOME ?? ".", ".automad-mcp.json");
+  const configPath = join(process.env.HOME ?? '.', '.automad-mcp.json');
   const current = await loadConfig();
   const updated = { ...current, ...config };
 
   // Ensure directory exists
-  const dir = configPath.substring(0, configPath.lastIndexOf("/"));
+  const dir = configPath.substring(0, configPath.lastIndexOf('/'));
   if (!existsSync(dir)) {
     await mkdir(dir, { recursive: true });
   }
 
-  await writeFile(configPath, JSON.stringify(updated, null, 2), "utf-8");
+  await writeFile(configPath, JSON.stringify(updated, null, 2), 'utf-8');
   cachedConfig = updated;
 }
 
@@ -89,27 +89,27 @@ export function parseArgs(argv: string[]): {
     const arg = argv[i];
 
     switch (arg) {
-      case "-v":
-      case "--verbose":
+      case '-v':
+      case '--verbose':
         config.verbose = true;
         break;
-      case "--cache-dir":
+      case '--cache-dir':
         if (argv[i + 1]) {
           config.cacheDir = argv[i + 1];
           i++;
         }
         break;
-      case "--no-cache":
+      case '--no-cache':
         config.cacheTtlMs = 0;
         break;
-      case "--theme-path":
+      case '--theme-path':
         if (argv[i + 1]) {
           config.themePath = argv[i + 1];
           i++;
         }
         break;
       default:
-        if (!arg.startsWith("-")) {
+        if (!arg.startsWith('-')) {
           remaining.push(arg);
         }
     }

@@ -3,7 +3,7 @@ import { fetchWithRetry } from '../utils/fetch.js';
 
 describe('fetchWithRetry', () => {
   const mockFetch = vi.fn();
-  
+
   beforeEach(() => {
     vi.clearAllMocks();
     global.fetch = mockFetch;
@@ -26,12 +26,22 @@ describe('fetchWithRetry', () => {
   });
 
   it('retries on 500 server error', async () => {
-    const errorResponse = { ok: false, status: 500, statusText: 'Internal Server Error', text: async () => '', headers: new Headers() };
-    const successResponse = { ok: true, status: 200, statusText: 'OK', text: async () => 'content', headers: new Headers() };
-    
-    mockFetch
-      .mockResolvedValueOnce(errorResponse)
-      .mockResolvedValueOnce(successResponse);
+    const errorResponse = {
+      ok: false,
+      status: 500,
+      statusText: 'Internal Server Error',
+      text: async () => '',
+      headers: new Headers(),
+    };
+    const successResponse = {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => 'content',
+      headers: new Headers(),
+    };
+
+    mockFetch.mockResolvedValueOnce(errorResponse).mockResolvedValueOnce(successResponse);
 
     const result = await fetchWithRetry({ url: 'https://example.com', retries: 3, delayMs: 10 });
 
@@ -40,12 +50,22 @@ describe('fetchWithRetry', () => {
   });
 
   it('retries on 429 rate limit', async () => {
-    const rateLimitResponse = { ok: false, status: 429, statusText: 'Too Many Requests', text: async () => '', headers: new Headers() };
-    const successResponse = { ok: true, status: 200, statusText: 'OK', text: async () => 'content', headers: new Headers() };
-    
-    mockFetch
-      .mockResolvedValueOnce(rateLimitResponse)
-      .mockResolvedValueOnce(successResponse);
+    const rateLimitResponse = {
+      ok: false,
+      status: 429,
+      statusText: 'Too Many Requests',
+      text: async () => '',
+      headers: new Headers(),
+    };
+    const successResponse = {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => 'content',
+      headers: new Headers(),
+    };
+
+    mockFetch.mockResolvedValueOnce(rateLimitResponse).mockResolvedValueOnce(successResponse);
 
     const result = await fetchWithRetry({ url: 'https://example.com', retries: 3, delayMs: 10 });
 
@@ -54,7 +74,13 @@ describe('fetchWithRetry', () => {
   });
 
   it('does not retry on 404', async () => {
-    const notFoundResponse = { ok: false, status: 404, statusText: 'Not Found', text: async () => '', headers: new Headers() };
+    const notFoundResponse = {
+      ok: false,
+      status: 404,
+      statusText: 'Not Found',
+      text: async () => '',
+      headers: new Headers(),
+    };
     mockFetch.mockResolvedValueOnce(notFoundResponse);
 
     const result = await fetchWithRetry({ url: 'https://example.com', retries: 3 });
@@ -65,11 +91,15 @@ describe('fetchWithRetry', () => {
 
   it('retries on network error', async () => {
     const networkError = new Error('Network error');
-    const successResponse = { ok: true, status: 200, statusText: 'OK', text: async () => 'content', headers: new Headers() };
-    
-    mockFetch
-      .mockRejectedValueOnce(networkError)
-      .mockResolvedValueOnce(successResponse);
+    const successResponse = {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => 'content',
+      headers: new Headers(),
+    };
+
+    mockFetch.mockRejectedValueOnce(networkError).mockResolvedValueOnce(successResponse);
 
     const result = await fetchWithRetry({ url: 'https://example.com', retries: 3, delayMs: 10 });
 
@@ -78,12 +108,18 @@ describe('fetchWithRetry', () => {
   });
 
   it('returns last error response after exhausting retries', async () => {
-    const errorResponse = { ok: false, status: 500, statusText: 'Internal Server Error', text: async () => '', headers: new Headers() };
+    const errorResponse = {
+      ok: false,
+      status: 500,
+      statusText: 'Internal Server Error',
+      text: async () => '',
+      headers: new Headers(),
+    };
     mockFetch.mockResolvedValue(errorResponse);
 
     // After exhausting retries, returns the last (error) response
     const result = await fetchWithRetry({ url: 'https://example.com', retries: 2, delayMs: 1 });
-    
+
     expect(result.status).toBe(500);
     // 1 initial + 2 retries = 3 calls
     expect(mockFetch).toHaveBeenCalledTimes(3);
@@ -91,10 +127,22 @@ describe('fetchWithRetry', () => {
 
   it('uses exponential backoff', async () => {
     vi.useFakeTimers();
-    
-    const errorResponse = { ok: false, status: 500, statusText: 'Error', text: async () => '', headers: new Headers() };
-    const successResponse = { ok: true, status: 200, statusText: 'OK', text: async () => 'content', headers: new Headers() };
-    
+
+    const errorResponse = {
+      ok: false,
+      status: 500,
+      statusText: 'Error',
+      text: async () => '',
+      headers: new Headers(),
+    };
+    const successResponse = {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      text: async () => 'content',
+      headers: new Headers(),
+    };
+
     mockFetch
       .mockResolvedValueOnce(errorResponse)
       .mockResolvedValueOnce(errorResponse)
@@ -108,7 +156,7 @@ describe('fetchWithRetry', () => {
 
     const result = await promise;
     expect(result.ok).toBe(true);
-    
+
     vi.useRealTimers();
   });
 });

@@ -1,7 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const dockerHelpInputSchema = z.object({
-  topic: z.enum(["all", "setup", "commands", "debug", "compose"]).optional().default("all").describe("Docker help topic"),
+  topic: z
+    .enum(['all', 'setup', 'commands', 'debug', 'compose'])
+    .optional()
+    .default('all')
+    .describe('Docker help topic'),
 });
 
 export type DockerHelpInput = z.infer<typeof dockerHelpInputSchema>;
@@ -12,16 +16,16 @@ export type DockerHelpInput = z.infer<typeof dockerHelpInputSchema>;
 export function getDockerHelp(input: DockerHelpInput): string {
   const { topic } = input;
 
-  if (topic === "setup") {
+  if (topic === 'setup') {
     return formatSetup();
   }
-  if (topic === "commands") {
+  if (topic === 'commands') {
     return formatCommands();
   }
-  if (topic === "debug") {
+  if (topic === 'debug') {
     return formatDebug();
   }
-  if (topic === "compose") {
+  if (topic === 'compose') {
     return formatCompose();
   }
 
@@ -29,15 +33,9 @@ export function getDockerHelp(input: DockerHelpInput): string {
 }
 
 function formatAll(): string {
-  return [
-    formatSetup(),
-    "",
-    formatCommands(),
-    "",
-    formatDebug(),
-    "",
-    formatCompose(),
-  ].join("\n---\n\n");
+  return [formatSetup(), '', formatCommands(), '', formatDebug(), '', formatCompose()].join(
+    '\n---\n\n'
+  );
 }
 
 function formatSetup(): string {
@@ -205,4 +203,4 @@ Nur \`/app/packages\` zu mounten:
 }
 
 // Export for testing
-export const dockerHelpTopics = ["all", "setup", "commands", "debug", "compose"];
+export const dockerHelpTopics = ['all', 'setup', 'commands', 'debug', 'compose'];

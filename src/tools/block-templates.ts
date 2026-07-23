@@ -1,8 +1,12 @@
-import { z } from "zod";
-import { fetchWithRetry } from "../utils/fetch.js";
+import { z } from 'zod';
+import { fetchWithRetry } from '../utils/fetch.js';
 
 export const blockTemplatesInputSchema = z.object({
-  type: z.enum(["all", "pagelist", "sections"]).optional().default("all").describe("Block template type"),
+  type: z
+    .enum(['all', 'pagelist', 'sections'])
+    .optional()
+    .default('all')
+    .describe('Block template type'),
 });
 
 export const blockTemplateInputSchema = z.object({
@@ -15,16 +19,13 @@ export type BlockTemplateInput = z.infer<typeof blockTemplateInputSchema>;
 
 // Block templates available in the starter kit
 const BLOCK_TEMPLATES: Record<string, { path: string; description: string }[]> = {
-  pagelist: [
-    { path: "blocks/pagelist/grid.php", description: "Grid layout for pagelist" },
-  ],
+  pagelist: [{ path: 'blocks/pagelist/grid.php', description: 'Grid layout for pagelist' }],
   // Additional patterns based on Automad standard theme
-  sections: [
-    { path: "blocks/section.php", description: "Section wrapper block" },
-  ],
+  sections: [{ path: 'blocks/section.php', description: 'Section wrapper block' }],
 };
 
-const STARTER_KIT_BASE = "https://raw.githubusercontent.com/automadcms/automad-theme-starter-kit/master";
+const STARTER_KIT_BASE =
+  'https://raw.githubusercontent.com/automadcms/automad-theme-starter-kit/master';
 
 /**
  * List available block templates
@@ -33,44 +34,46 @@ export async function getBlockTemplates(input: BlockTemplatesInput): Promise<str
   const { type } = input;
 
   const lines: string[] = [
-    "## Automad Block Templates\n",
-    "Block templates customize how blocks render in the editor.\n",
-    "### Verfügbare Block-Typen\n",
+    '## Automad Block Templates\n',
+    'Block templates customize how blocks render in the editor.\n',
+    '### Verfügbare Block-Typen\n',
   ];
 
-  const types = type === "all" ? Object.keys(BLOCK_TEMPLATES) : [type];
+  const types = type === 'all' ? Object.keys(BLOCK_TEMPLATES) : [type];
 
   for (const t of types) {
     const templates = BLOCK_TEMPLATES[t] || [];
     if (templates.length === 0) continue;
 
     lines.push(`#### ${t.charAt(0).toUpperCase() + t.slice(1)}`);
-    lines.push("");
-    lines.push("| Variante | Pfad | Beschreibung |");
-    lines.push("|----------|------|-------------|");
+    lines.push('');
+    lines.push('| Variante | Pfad | Beschreibung |');
+    lines.push('|----------|------|-------------|');
     for (const tmpl of templates) {
-      lines.push(`| \`${tmpl.path.split("/").pop()?.replace(".php", "")}\` | \`${tmpl.path}\` | ${tmpl.description} |`);
+      lines.push(
+        `| \`${tmpl.path.split('/').pop()?.replace('.php', '')}\` | \`${tmpl.path}\` | ${tmpl.description} |`
+      );
     }
-    lines.push("");
+    lines.push('');
   }
 
   // Usage section
-  lines.push("### Verwendung in Templates");
-  lines.push("");
-  lines.push("```html");
-  lines.push("<# Automad nutzt das Block-Template automatisch,");
-  lines.push("   wenn es in blocks/<type>/<variant>.php liegt. #>");
-  lines.push("");
+  lines.push('### Verwendung in Templates');
+  lines.push('');
+  lines.push('```html');
+  lines.push('<# Automad nutzt das Block-Template automatisch,');
+  lines.push('   wenn es in blocks/<type>/<variant>.php liegt. #>');
+  lines.push('');
   lines.push('<@ blocks/pagelist/grid.php @>');
-  lines.push("```");
-  lines.push("");
-  lines.push("### Eigenes Block-Template erstellen");
-  lines.push("");
-  lines.push("1. Kopiere ein bestehendes Template aus dem Starter Kit");
-  lines.push("2. Lege es unter `blocks/<typ>/<variante>.php` ab");
-  lines.push("3. Automad lädt es automatisch für diesen Block-Typ");
+  lines.push('```');
+  lines.push('');
+  lines.push('### Eigenes Block-Template erstellen');
+  lines.push('');
+  lines.push('1. Kopiere ein bestehendes Template aus dem Starter Kit');
+  lines.push('2. Lege es unter `blocks/<typ>/<variante>.php` ab');
+  lines.push('3. Automad lädt es automatisch für diesen Block-Typ');
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 /**
@@ -80,9 +83,7 @@ export async function getBlockTemplate(input: BlockTemplateInput): Promise<strin
   const { type, variant } = input;
 
   // Build path
-  const path = variant
-    ? `blocks/${type}/${variant}.php`
-    : `blocks/${type}.php`;
+  const path = variant ? `blocks/${type}/${variant}.php` : `blocks/${type}.php`;
 
   const url = `${STARTER_KIT_BASE}/${path}`;
 
@@ -94,44 +95,44 @@ export async function getBlockTemplate(input: BlockTemplateInput): Promise<strin
     const content = await response.text();
 
     return [
-      `## Block Template: ${variant || "default"}`,
-      "",
+      `## Block Template: ${variant || 'default'}`,
+      '',
       `**Typ:** ${type}`,
       `**Pfad:** \`${path}\``,
-      "",
-      "---",
-      "",
-      "```php",
+      '',
+      '---',
+      '',
+      '```php',
       content,
-      "```",
-      "",
-      "---",
-      "",
-      "### Verwendung",
-      "",
-      `Place this file at \`blocks/${type}/${variant || "default"}.php\` in your theme.`,
-      "",
-      "### Anpassen",
-      "",
-      "1. Kopiere den Code in dein Theme",
-      "2. Passe Styling/HTML an deine Bedürfnisse an",
-      "3. Das Template wird automatisch von Automad geladen",
-    ].join("\n");
+      '```',
+      '',
+      '---',
+      '',
+      '### Verwendung',
+      '',
+      `Place this file at \`blocks/${type}/${variant || 'default'}.php\` in your theme.`,
+      '',
+      '### Anpassen',
+      '',
+      '1. Kopiere den Code in dein Theme',
+      '2. Passe Styling/HTML an deine Bedürfnisse an',
+      '3. Das Template wird automatisch von Automad geladen',
+    ].join('\n');
   } catch (err) {
     const error = err as Error;
-    if (error.message.includes("404")) {
+    if (error.message.includes('404')) {
       return [
         `❌ Block Template nicht gefunden`,
-        "",
+        '',
         `**Typ:** ${type}`,
-        `**Variante:** ${variant || "default"}`,
+        `**Variante:** ${variant || 'default'}`,
         `**Pfad:** \`${path}\``,
-        "",
-        "Verfügbare Block-Typen:",
-        ...Object.keys(BLOCK_TEMPLATES).map((t) => `  - ${t}`),
-        "",
-        "Tipp: Nutze `get_block_templates` für eine Übersicht.",
-      ].join("\n");
+        '',
+        'Verfügbare Block-Typen:',
+        ...Object.keys(BLOCK_TEMPLATES).map(t => `  - ${t}`),
+        '',
+        'Tipp: Nutze `get_block_templates` für eine Übersicht.',
+      ].join('\n');
     }
     throw err;
   }

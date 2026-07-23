@@ -1,24 +1,17 @@
-import { z } from "zod";
-import { writeFile, mkdir } from "fs/promises";
-import { existsSync } from "fs";
-import { join } from "path";
+import { z } from 'zod';
+import { writeFile, mkdir } from 'fs/promises';
+import { existsSync } from 'fs';
+import { join } from 'path';
 
 export const themeGeneratorInputSchema = z.object({
-  name: z
-    .string()
-    .min(1)
-    .optional()
-    .describe("Theme name (e.g., 'My Theme')"),
-  outputPath: z
-    .string()
-    .optional()
-    .describe("Output directory for new theme"),
+  name: z.string().min(1).optional().describe("Theme name (e.g., 'My Theme')"),
+  outputPath: z.string().optional().describe('Output directory for new theme'),
   template: z
-    .enum(["minimal", "starter", "blog", "portfolio"])
+    .enum(['minimal', 'starter', 'blog', 'portfolio'])
     .optional()
-    .default("starter")
-    .describe("Template type"),
-  author: z.string().optional().default("Developer").describe("Author name"),
+    .default('starter')
+    .describe('Template type'),
+  author: z.string().optional().default('Developer').describe('Author name'),
 });
 
 export type ThemeGeneratorInput = z.infer<typeof themeGeneratorInputSchema>;
@@ -32,10 +25,10 @@ interface GeneratedFile {
  * Generate a new Automad theme from template
  */
 export async function generateTheme(input: ThemeGeneratorInput): Promise<string> {
-  const { name = "My Theme", outputPath, template = "starter", author = "Developer" } = input;
+  const { name = 'My Theme', outputPath, template = 'starter', author = 'Developer' } = input;
 
   // Determine output path
-  const themeName = name.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+  const themeName = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   const basePath = outputPath ?? join(process.cwd(), themeName);
   const fullPath = join(basePath, themeName);
 
@@ -48,7 +41,9 @@ export async function generateTheme(input: ThemeGeneratorInput): Promise<string>
   const files = getTemplateFiles(themeName, name, author, template);
 
   // Create directories
-  const dirs = new Set(files.map((f) => join(fullPath, f.path.substring(0, f.path.lastIndexOf("/")))));
+  const dirs = new Set(
+    files.map(f => join(fullPath, f.path.substring(0, f.path.lastIndexOf('/'))))
+  );
 
   for (const dir of dirs) {
     await mkdir(dir, { recursive: true });
@@ -57,7 +52,7 @@ export async function generateTheme(input: ThemeGeneratorInput): Promise<string>
   // Write files
   for (const file of files) {
     const filePath = join(fullPath, file.path);
-    await writeFile(filePath, file.content, "utf-8");
+    await writeFile(filePath, file.content, 'utf-8');
   }
 
   // Format output
@@ -65,32 +60,32 @@ export async function generateTheme(input: ThemeGeneratorInput): Promise<string>
     `## Theme Generated: ${name}\n`,
     `**Path:** \`${fullPath}\`\n`,
     `**Template:** ${template}\n`,
-    "---\n",
+    '---\n',
   ];
 
-  lines.push("### Generated Files\n");
+  lines.push('### Generated Files\n');
   for (const file of files) {
     lines.push(`- \`${file.path}\``);
   }
-  lines.push("");
+  lines.push('');
 
-  lines.push("### Next Steps\n");
-  lines.push("```bash");
+  lines.push('### Next Steps\n');
+  lines.push('```bash');
   lines.push(`cd ${fullPath}`);
-  lines.push("npm install");
-  lines.push("npm run dev");
-  lines.push("```\n");
+  lines.push('npm install');
+  lines.push('npm run dev');
+  lines.push('```\n');
 
-  lines.push("Then activate the theme in your Automad dashboard.\n");
+  lines.push('Then activate the theme in your Automad dashboard.\n');
 
-  if (template === "minimal") {
-    lines.push("**Note:** This is a minimal theme. For production, consider:\n");
-    lines.push("- Adding `lib/i18n.php` for translations");
-    lines.push("- Pre-compiling CSS to `dist/`");
-    lines.push("- Adding proper error handling");
+  if (template === 'minimal') {
+    lines.push('**Note:** This is a minimal theme. For production, consider:\n');
+    lines.push('- Adding `lib/i18n.php` for translations');
+    lines.push('- Pre-compiling CSS to `dist/`');
+    lines.push('- Adding proper error handling');
   }
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
 
 function getTemplateFiles(
@@ -103,7 +98,7 @@ function getTemplateFiles(
 
   // README.md
   files.push({
-    path: "README.md",
+    path: 'README.md',
     content: `# ${displayName}
 
 An Automad theme.
@@ -126,40 +121,42 @@ MIT`,
 
   // theme.json
   files.push({
-    path: "theme.json",
+    path: 'theme.json',
     content: JSON.stringify(
       {
         name: displayName,
         description: `A custom Automad theme`,
         author: author,
-        version: "1.0.0",
-        license: "MIT",
+        version: '1.0.0',
+        license: 'MIT',
         masks: { page: [], shared: [] },
         tooltips: {
-          "+main": "Main content area — use the block editor",
+          '+main': 'Main content area — use the block editor',
         },
       },
-      null, 2
+      null,
+      2
     ),
   });
 
   // composer.json
   files.push({
-    path: "composer.json",
+    path: 'composer.json',
     content: JSON.stringify(
       {
         name: `custom/${themeName}`,
         description: `A custom Automad theme`,
-        type: "automad-package",
-        license: "MIT",
+        type: 'automad-package',
+        license: 'MIT',
       },
-      null, 2
+      null,
+      2
     ),
   });
 
   // default.php
   files.push({
-    path: "default.php",
+    path: 'default.php',
     content: `<#
 
     Default page template.
@@ -171,7 +168,7 @@ MIT`,
 
   // page_not_found.php
   files.push({
-    path: "page_not_found.php",
+    path: 'page_not_found.php',
     content: `<#
 
     404 page template.
@@ -191,7 +188,7 @@ MIT`,
 
   // components/page.php
   files.push({
-    path: "components/page.php",
+    path: 'components/page.php',
     content: `<# Shared page layout #>
 <!DOCTYPE html>
 <html lang="@{ :lang | def('de') }">
@@ -213,7 +210,7 @@ MIT`,
 
   // dist/main.css
   files.push({
-    path: "dist/main.css",
+    path: 'dist/main.css',
     content: `/* ${displayName} Theme */
 
 :root {
@@ -265,7 +262,7 @@ a { color: var(--color-link); }
 
   // lib/functions.php
   files.push({
-    path: "lib/functions.php",
+    path: 'lib/functions.php',
     content: `<?php
 
 use Automad\\Core\\Automad;
@@ -278,9 +275,9 @@ use Automad\\Core\\Automad;
   });
 
   // Add template-specific files
-  if (template === "blog" || template === "starter") {
+  if (template === 'blog' || template === 'starter') {
     files.push({
-      path: "blog.php",
+      path: 'blog.php',
       content: `<#
 
     Blog overview template.
@@ -307,7 +304,7 @@ use Automad\\Core\\Automad;
     });
 
     files.push({
-      path: "post.php",
+      path: 'post.php',
       content: `<#
 
     Single blog post template.
@@ -337,7 +334,7 @@ use Automad\\Core\\Automad;
 
   // .gitignore
   files.push({
-    path: ".gitignore",
+    path: '.gitignore',
     content: `.DS_Store
 node_modules/
 *.map

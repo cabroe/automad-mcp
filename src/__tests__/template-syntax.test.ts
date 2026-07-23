@@ -26,7 +26,7 @@ describe('getTemplateSyntax', () => {
   it('explains blocks with @{ + }', () => {
     const result = getTemplateSyntax({ type: 'blocks' });
     expect(result).toContain('@{ +');
-    expect(result).toContain('Ohne');  // German lowercase
+    expect(result).toContain('Ohne'); // German lowercase
   });
 
   it('contains debugging section', () => {

@@ -14,7 +14,8 @@ describe('analyzeFields', () => {
 
   it('mentions common field types', async () => {
     const result = await analyzeFields({});
-    const hasFieldType = result.includes('+') || result.includes('text') || result.includes('Field');
+    const hasFieldType =
+      result.includes('+') || result.includes('text') || result.includes('Field');
     expect(hasFieldType).toBe(true);
   });
 

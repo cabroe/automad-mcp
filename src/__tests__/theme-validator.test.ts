@@ -15,13 +15,18 @@ describe('validateTheme', () => {
 
   it('shows score or checks', async () => {
     const result = await validateTheme({});
-    const hasCheck = result.includes('Score') || result.includes('theme.json') || result.includes('Error') || result.includes('check');
+    const hasCheck =
+      result.includes('Score') ||
+      result.includes('theme.json') ||
+      result.includes('Error') ||
+      result.includes('check');
     expect(hasCheck).toBe(true);
   });
 
   it('mentions required files', async () => {
     const result = await validateTheme({});
-    const hasFile = result.includes('theme.json') || result.includes('default.php') || result.includes('Error');
+    const hasFile =
+      result.includes('theme.json') || result.includes('default.php') || result.includes('Error');
     expect(hasFile).toBe(true);
   });
 });

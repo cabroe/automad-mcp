@@ -1,10 +1,23 @@
-import { z } from "zod";
-import { PAGES, BASE_URL } from "../utils/pages.js";
+import { z } from 'zod';
+import { PAGES, BASE_URL } from '../utils/pages.js';
 
 export const searchDocsInputSchema = z.object({
-  query: z.string().min(1).describe("The search term to look for in the Automad documentation."),
-  page: z.number().int().min(1).default(1).optional().describe("Page number for pagination (default: 1)."),
-  perPage: z.number().int().min(1).max(50).default(10).optional().describe("Number of results per page (default: 10, max: 50)."),
+  query: z.string().min(1).describe('The search term to look for in the Automad documentation.'),
+  page: z
+    .number()
+    .int()
+    .min(1)
+    .default(1)
+    .optional()
+    .describe('Page number for pagination (default: 1).'),
+  perPage: z
+    .number()
+    .int()
+    .min(1)
+    .max(50)
+    .default(10)
+    .optional()
+    .describe('Number of results per page (default: 10, max: 50).'),
 });
 
 export type SearchDocsInput = z.infer<typeof searchDocsInputSchema>;
@@ -21,10 +34,10 @@ export function searchDocs(input: SearchDocsInput): string {
   const terms = query
     .toLowerCase()
     .split(/\s+/)
-    .filter((t) => t.length > 1);
+    .filter(t => t.length > 1);
 
   if (terms.length === 0) {
-    return "Please provide a more specific search query.";
+    return 'Please provide a more specific search query.';
   }
 
   const results: SearchResult[] = [];
@@ -81,13 +94,13 @@ export function searchDocs(input: SearchDocsInput): string {
   ];
 
   for (const r of paginatedResults) {
-    const parentInfo = r.parent ? ` _(${r.parent})_` : "";
+    const parentInfo = r.parent ? ` _(${r.parent})_` : '';
     lines.push(`- **${r.title}**${parentInfo}  \n  ${BASE_URL}${r.url}`);
   }
 
   // Pagination controls
   if (totalPages > 1) {
-    lines.push("\n_Pagination:_");
+    lines.push('\n_Pagination:_');
     const prevPage = clampedPage > 1 ? clampedPage - 1 : null;
     const nextPage = clampedPage < totalPages ? clampedPage + 1 : null;
 
@@ -100,9 +113,7 @@ export function searchDocs(input: SearchDocsInput): string {
     lines.push(`- Show more: add \`page: ${clampedPage + 1}\` to your search`);
   }
 
-  lines.push(
-    `\nUse the \`get_page\` tool with one of these URLs to read the full content.`
-  );
+  lines.push(`\nUse the \`get_page\` tool with one of these URLs to read the full content.`);
 
-  return lines.join("\n");
+  return lines.join('\n');
 }
