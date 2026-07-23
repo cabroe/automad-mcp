@@ -1,9 +1,19 @@
 # Automad MCP Server
 
 [![CI](https://github.com/cabroe/automad-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/cabroe/automad-mcp/actions)
-[![Tests](https://img.shields.io/badge/tests-236%20passing-brightgreen)](https://github.com/cabroe/automad-mcp/actions)
+[![Tests](https://img.shields.io/badge/tests-218%20passing-brightgreen)](https://github.com/cabroe/automad-mcp/actions)
 
-An [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server for **Automad v2** - provides AI assistants direct access to the [Automad CMS v2](https://automad.org/version-2) documentation, the official [Theme Starter Kit](https://github.com/automadcms/automad-theme-starter-kit), and theme development tools.
+An [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server for **Automad v2** — provides AI assistants direct access to the [Automad CMS v2](https://automad.org/version-2) documentation, the official [Theme Starter Kit](https://github.com/automadcms/automad-theme-starter-kit), and theme development tools.
+
+## Status
+
+| Check | Status |
+|-------|--------|
+| Tests | ✅ 218 bestanden |
+| Lint | ✅ 0 Warnings |
+| Format | ✅ OK |
+| Tools | ✅ 29 dokumentiert |
+| Branch Protection | ✅ Aktiv |
 
 ## Documentation
 
