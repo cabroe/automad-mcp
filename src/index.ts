@@ -27,6 +27,13 @@ import { themeCheck } from './tools/theme-checks.js';
 import { generateCode } from './tools/code-generator.js';
 import { themeDiff } from './tools/theme-diff.js';
 import { packTheme } from './tools/theme-pack.js';
+import { analyzeTheme } from './tools/theme-analyzer.js';
+import { findThemeIssues } from './tools/theme-issues.js';
+import { listFieldTypes } from './tools/field-types.js';
+import { generateDashboardTemplate } from './tools/dashboard-generator.js';
+import { i18nHelper } from './tools/i18n-helper.js';
+import { validateFieldNames } from './tools/field-validator.js';
+import { checkBrokenLinks } from './tools/link-checker.js';
 import { getCacheStats, clearAllCaches, clearCache } from './utils/cache.js';
 import { loadConfig, parseArgs, logVerbose } from './utils/config.js';
 
@@ -553,6 +560,111 @@ server.tool(
   },
   async args => {
     const result = await packTheme({ themePath: args.themePath, outputPath: args.outputPath });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
+
+// ─── Theme Analysis ──────────────────────────────────────────────────────────
+
+server.tool(
+  'analyze_theme',
+  'Analyze and visualize theme structure.',
+  {
+    themePath: z.string().optional().describe('Path to theme'),
+  },
+  async args => {
+    const result = await analyzeTheme({ themePath: args.themePath });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
+
+server.tool(
+  'find_theme_issues',
+  'Find Automad-specific issues in a theme.',
+  {
+    themePath: z.string().optional().describe('Path to theme'),
+  },
+  async args => {
+    const result = await findThemeIssues({ themePath: args.themePath });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
+
+server.tool(
+  'list_field_types',
+  'List all available Automad field types with widget mapping.',
+  {
+    type: z
+      .enum(['all', 'widget', 'dashboard'])
+      .optional()
+      .default('all')
+      .describe('Filter by type'),
+  },
+  async args => {
+    const result = listFieldTypes({ type: args.type });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
+
+// ─── Dashboard Generator ─────────────────────────────────────────────────────
+
+server.tool(
+  'generate_dashboard_template',
+  'Generate block layout templates for the dashboard.',
+  {
+    type: z
+      .enum(['block-layout', 'pagelist-block', 'columns-block', 'section-block'])
+      .describe('Block type'),
+    name: z.string().optional().describe('Custom name'),
+  },
+  async args => {
+    const result = generateDashboardTemplate({ type: args.type, name: args.name });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
+
+// ─── I18n Tools ──────────────────────────────────────────────────────────────
+
+server.tool(
+  'check_i18n_consistency',
+  'Check i18n consistency between languages.',
+  {
+    themePath: z.string().optional().describe('Path to theme'),
+    lang: z.string().optional().default('de').describe('Language code'),
+    action: z.enum(['check', 'extract', 'validate']).optional().default('check'),
+  },
+  async args => {
+    const result = await i18nHelper({
+      themePath: args.themePath,
+      lang: args.lang,
+      action: args.action,
+    });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
+
+server.tool(
+  'validate_field_names',
+  'Validate field names follow naming conventions.',
+  {
+    themePath: z.string().optional().describe('Path to theme'),
+    style: z.enum(['camel', 'snake', 'both']).optional().default('snake').describe('Naming style'),
+  },
+  async args => {
+    const result = await validateFieldNames({ themePath: args.themePath, style: args.style });
+    return { content: [{ type: 'text', text: result }] };
+  }
+);
+
+server.tool(
+  'check_broken_links',
+  'Check for broken internal links in templates.',
+  {
+    themePath: z.string().optional().describe('Path to theme'),
+    baseUrl: z.string().optional().default('/').describe('Base URL'),
+  },
+  async args => {
+    const result = await checkBrokenLinks({ themePath: args.themePath, baseUrl: args.baseUrl });
     return { content: [{ type: 'text', text: result }] };
   }
 );

@@ -12,7 +12,7 @@ An [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server for **
 | Tests | ✅ 218 bestanden |
 | Lint | ✅ 0 Warnings |
 | Format | ✅ OK |
-| Tools | ✅ 29 dokumentiert |
+| Tools | ✅ 39 dokumentiert |
 | Branch Protection | ✅ Aktiv |
 
 ## Documentation
@@ -151,8 +151,30 @@ npm start
 |------|-------------|
 | `get_cache_stats` | Show cache statistics |
 | `clear_cache` | Clear specific cache |
-| `clear_cache` | Clear specific cache |
 | `clear_all_caches` | Clear all caches |
+
+### Theme Analysis
+
+| Tool | Description |
+|------|-------------|
+| `analyze_theme` | Analyze and visualize theme structure |
+| `find_theme_issues` | Find Automad-specific issues |
+| `check_broken_links` | Check for broken internal links |
+| `validate_field_names` | Validate naming conventions |
+| `list_field_types` | List all field types with widget mapping |
+
+### Dashboard Generator
+
+| Tool | Description |
+|------|-------------|
+| `generate_dashboard_template` | Generate block layout templates |
+
+### I18n Helpers
+
+| Tool | Description |
+|------|-------------|
+| `check_i18n_consistency` | Check i18n consistency |
+| `validate_field_names` | Validate field naming conventions |
 
 ## Usage Examples
 
