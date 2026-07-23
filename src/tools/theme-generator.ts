@@ -127,7 +127,7 @@ MIT`,
         name: displayName,
         description: `A custom Automad theme`,
         author: author,
-        version: '1.0.0',
+        version: '2.0.0',
         license: 'MIT',
         masks: { page: [], shared: [] },
         tooltips: {

@@ -34,7 +34,7 @@ loadConfig().then(() => {
 // ─── MCP Server ─────────────────────────────────────────────────────────────
 const server = new McpServer({
   name: 'automad-docs',
-  version: '1.0.0',
+  version: '2.0.0',
 });
 
 // ─── Documentation Tools ─────────────────────────────────────────────────────
@@ -441,10 +441,6 @@ server.tool('get_automad_version', 'Get information about Automad Version 2.', {
     '- Dashboard Redesign with block editor',
     '- GitHub-based package system',
     '- TypeScript support in themes',
-    '',
-    '**Migration from v1:**',
-    '- Themes need updates for new syntax',
-    '- Blocks replace old content areas',
     '',
     '**Resources:**',
     '- [Version 2 Overview](https://automad.org/version-2)',
