@@ -5,7 +5,7 @@
 #>
 <@ components/page.php @>
 
-<@~ snippet hdMain ~@>
+<@~ snippet main ~@>
 <main class="post">
     <article>
         <header>

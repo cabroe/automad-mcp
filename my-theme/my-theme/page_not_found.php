@@ -5,7 +5,7 @@
 #>
 <@ components/page.php @>
 
-<@~ snippet hdMain ~@>
+<@~ snippet main ~@>
 <main class="error-page">
     <h1>404 - Page Not Found</h1>
     <p>The page you're looking for doesn't exist.</p>
