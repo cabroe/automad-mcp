@@ -7,10 +7,12 @@ export const apiDocsInputSchema = z.object({
 
 export type ApiDocsInput = z.infer<typeof apiDocsInputSchema>;
 
+// Live URLs on automad.org — the docs root no longer exposes /api/... sub-paths,
+// so each section points to the real page that documents it.
 const API_DOCS = {
   php: {
     title: 'PHP API',
-    url: '/api/php',
+    url: '/developer-guide/api-reference',
     description: 'Server-side PHP API for theme development',
     endpoints: [
       { name: 'Automad::getContext()', desc: 'Get current page context' },
@@ -24,7 +26,7 @@ const API_DOCS = {
   },
   rest: {
     title: 'REST API',
-    url: '/api/rest',
+    url: '/developer-guide/api-reference',
     description: 'Headless REST API endpoints',
     endpoints: [
       { name: 'GET /api/pages', desc: 'List all pages' },
@@ -37,7 +39,7 @@ const API_DOCS = {
   },
   webhooks: {
     title: 'Webhooks',
-    url: '/api/webhooks',
+    url: '/developer-guide/api-reference',
     description: 'HTTP callbacks for events',
     endpoints: [
       { name: 'page.created', desc: 'Triggered when page is created' },
@@ -58,7 +60,11 @@ export function getApiDocs(input: ApiDocsInput): string {
     return formatApiDoc(type, API_DOCS[type as keyof typeof API_DOCS]);
   }
 
-  const lines: string[] = ['## Automad v2 API Reference\n', `Source: ${BASE_URL}/api\n`, '---\n'];
+  const lines: string[] = [
+    '## Automad v2 API Reference\n',
+    `Source: ${BASE_URL}/developer-guide/api-reference\n`,
+    '---\n',
+  ];
 
   for (const [, api] of Object.entries(API_DOCS)) {
     lines.push(`### ${api.title}\n`);

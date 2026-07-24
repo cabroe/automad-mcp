@@ -51,7 +51,7 @@ export function listFieldTypes(input: FieldTypesInput): string {
 
   const lines: string[] = [
     '## Automad Field Types\n',
-    `Source: ${BASE_URL}/building-themes/theme-json\n`,
+    `Source: ${BASE_URL}/developer-guide/building-themes/theme-json\n`,
     '---\n',
     '### Naming Convention\n',
     'Field type is determined by the **prefix** of the field name:\n',

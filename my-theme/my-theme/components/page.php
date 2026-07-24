@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="/packages/@{ theme }/dist/main.css">
 </head>
 <body>
-    <@~ snippet hdMain ~@>
+    <@~ snippet main ~@>
     <@~ end ~@>
 
-    <@ hdMain @>
+    <@ main @>
 </body>
 </html>

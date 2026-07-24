@@ -85,7 +85,8 @@ export function getCliDocs(input: CliDocsInput): string {
 
   const lines: string[] = [
     '## Automad v2 CLI Commands\n',
-    `Source: ${BASE_URL}/cli\n`,
+    // Live docs page for CLI / console commands.
+    `Source: ${BASE_URL}/system/console\n`,
     '\nRun with: `php amd <command>`\n',
     '---\n',
     '| Command | Description |',

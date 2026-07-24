@@ -5,7 +5,7 @@
 #>
 <@ components/page.php @>
 
-<@~ snippet hdMain ~@>
+<@~ snippet main ~@>
 <main class="blog">
     <h1>@{ title | def('Blog') }</h1>
     <div class="posts">
