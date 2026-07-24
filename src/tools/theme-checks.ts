@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import { readFile } from 'fs/promises';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync, readdirSync } from 'fs';
 import { join } from 'path';
 
 export const themeCheckInputSchema = z.object({
@@ -91,7 +90,7 @@ async function checkSchema(themeDir: string): Promise<CheckResult[]> {
   }
 
   try {
-    const content = await readFile(themeJsonPath, 'utf-8');
+    const content = readFileSync(themeJsonPath, 'utf-8');
     const theme = JSON.parse(content);
 
     const required = ['name'];
@@ -147,7 +146,7 @@ function checkSeo(themeDir: string): CheckResult[] {
   // Check for meta tags in default.php
   const defaultPath = join(themeDir, 'default.php');
   if (existsSync(defaultPath)) {
-    const content = require('fs').readFileSync(defaultPath, 'utf-8');
+    const content = readFileSync(defaultPath, 'utf-8');
 
     if (content.includes(':title')) {
       results.push({ passed: true, message: 'SEO: <title> tag found', severity: 'info' });
@@ -171,7 +170,6 @@ function checkSeo(themeDir: string): CheckResult[] {
 
 function getPhpFilesSync(dir: string): string[] {
   const files: string[] = [];
-  const { readdirSync } = require('fs');
   try {
     const entries = readdirSync(dir, { withFileTypes: true });
     for (const entry of entries) {

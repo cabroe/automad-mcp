@@ -436,6 +436,7 @@ server.tool('get_automad_version', 'Get information about Automad v2.', {}, asyn
     '## Automad v2',
     '',
     '**Documentation:** [https://automad.org/version-2](https://automad.org/version-2)',
+    '**Developer Guide:** [https://automad.org/developer-guide](https://automad.org/developer-guide)',
     '',
     '**Starter Kit:** [automad-theme-starter-kit](https://github.com/automadcms/automad-theme-starter-kit)',
   ];

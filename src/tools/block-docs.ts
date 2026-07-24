@@ -106,7 +106,10 @@ export function getBlockDocs(input: BlockDocsInput): string {
 
   const lines: string[] = [
     '## Automad v2 Block Reference\n',
-    `Source: ${BASE_URL}/blocks\n`,
+    // The Automad docs do not expose a dedicated /blocks page. The closest
+    // live references are the user-guide "Using Blocks" article and the
+    // developer-guide pages for customizing / laying out blocks.
+    `Source: ${BASE_URL}/user-guide/using-blocks\n`,
     '---\n',
   ];
 
@@ -132,7 +135,7 @@ function formatBlockDoc(
     '\n### Properties\n',
     ...block.props.map(p => `- ${p}`),
     '\n---\n',
-    `\n[Back to all blocks](${BASE_URL}/blocks)\n`,
+    `\n[Back to all blocks](${BASE_URL}/user-guide/using-blocks)\n`,
   ].join('\n');
 }
 
