@@ -1,9 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { themeCheck } from '../tools/theme-checks.js';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
 
-// Uses the bundled my-theme fixture shipped with the repo so we have a real
-// theme.json + default.php on disk without depending on the host filesystem.
-const THEME_PATH = new URL('../../my-theme/my-theme', import.meta.url).pathname.replace(/^\//, '');
+// Uses the bundled my-theme fixture shipped with the repo. Resolve from this
+// test file so the path works identically on Windows, macOS and Linux CI.
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const THEME_PATH = resolve(__dirname, '../../my-theme/my-theme');
 
 describe('themeCheck', () => {
   it('runs without throwing on a real theme directory', async () => {
