@@ -60,7 +60,11 @@ export function getApiDocs(input: ApiDocsInput): string {
     return formatApiDoc(type, API_DOCS[type as keyof typeof API_DOCS]);
   }
 
-  const lines: string[] = ['## Automad v2 API Reference\n', `Source: ${BASE_URL}/developer-guide/api-reference\n`, '---\n'];
+  const lines: string[] = [
+    '## Automad v2 API Reference\n',
+    `Source: ${BASE_URL}/developer-guide/api-reference\n`,
+    '---\n',
+  ];
 
   for (const [, api] of Object.entries(API_DOCS)) {
     lines.push(`### ${api.title}\n`);

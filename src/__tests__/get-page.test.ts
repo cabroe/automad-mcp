@@ -24,8 +24,6 @@ describe('getPage', () => {
   });
 
   it('rejects non-automad.org URLs', async () => {
-    await expect(getPage({ url: 'https://example.com/foo' })).rejects.toThrow(
-      /automad\.org/
-    );
+    await expect(getPage({ url: 'https://example.com/foo' })).rejects.toThrow(/automad\.org/);
   });
 });
